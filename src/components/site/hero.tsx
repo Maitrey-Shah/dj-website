@@ -69,7 +69,7 @@ export function Hero() {
               {featuredEvent.venue}
             </p>
           </div>
-          <p className="text-muted-foreground ml-auto hidden items-center gap-2 text-xs tracking-[0.3em] uppercase lg:flex">
+          <p className="text-muted-foreground ml-auto hidden shrink-0 items-center gap-2 pr-2 text-[0.7rem] tracking-[0.24em] whitespace-nowrap uppercase lg:flex">
             Live • Music • Nightlife <ArrowDown className="h-4 w-4" />
           </p>
         </div>
