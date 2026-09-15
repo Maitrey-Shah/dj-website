@@ -74,7 +74,7 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
         {n}
         {suffix}
       </p>
-moké    </div>
+    </div>
   );
 }
 
@@ -116,10 +116,7 @@ export function BrandStory() {
                 <Counter key={s.label} value={s.value} suffix={s.suffix} />
               ))}
             </div>
-            <div className="mt-8 grid grid-cols-2 gap-8 sm:hidden" aria-hidden="true">
-              <span className="sr-only">Stats displayed above</span>
-            </div>
-            <div className="mt-8 hidden gap-8 sm:grid sm:grid-cols-4">
+            <div className="mt-2 grid grid-cols-2 gap-8 sm:grid-cols-4">
               {stats.map((s) => (
                 <p key={s.label} className="text-muted-foreground text-[0.65rem] tracking-[0.22em] uppercase">
                   {s.label}
