@@ -14,14 +14,14 @@ import gallery1 from "@/assets/gallery-1.jpg";
 /* ------------------------------------------------------------------ */
 
 export const brand = {
-  name: "NOIRÉ",
+  name: "AWAARA",
   tagline: "Canada's Desi Entertainment Experience",
   // PLACEHOLDER — replace with the real WhatsApp business number (digits only, incl. country code)
   whatsappNumber: "14165550123",
-  email: "hello@noirelive.ca",
+  email: "hello@awaara.ca",
   phone: "+1 (416) 555-0123",
   instagram: "https://instagram.com/",
-  instagramHandle: "@noire.live",
+  instagramHandle: "@awaara.live",
   facebook: "https://facebook.com/",
   youtube: "https://youtube.com/",
   tiktok: "https://tiktok.com/",

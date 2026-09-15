@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { brand } from "@/data/site";
 
 const links = [
   { label: "Home", to: "/", hash: "top" },
@@ -43,9 +42,16 @@ export function Navbar() {
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-4 sm:px-8">
         <Link
           to="/"
-          className="font-display text-xl font-extrabold tracking-[0.3em] uppercase"
+          className="shrink-0"
+          aria-label="AWAARA — home"
         >
-          {brand.name}
+          <img
+            src="/brand/awaara-logo-white.svg"
+            alt="AWAARA"
+            height={40}
+            className="h-9 w-auto sm:h-10"
+            style={{ filter: "drop-shadow(0 0 8px rgba(0,0,0,0.4))" }}
+          />
         </Link>
 
         <ul className="hidden items-center gap-9 lg:flex">
@@ -89,6 +95,14 @@ export function Navbar() {
             : "pointer-events-none translate-y-3 opacity-0",
         )}
       >
+        {/* Mobile menu logo */}
+        <Link to="/" onClick={() => setOpen(false)} className="mb-4 block" aria-label="AWAARA — home">
+          <img
+            src="/brand/awaara-logo-white.svg"
+            alt="AWAARA"
+            className="h-8 w-auto"
+          />
+        </Link>
         {links.map((l, i) => (
           <Link
             key={l.label}

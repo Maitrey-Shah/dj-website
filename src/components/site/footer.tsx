@@ -7,11 +7,13 @@ export function Footer() {
     <footer className="border-border/60 border-t">
       <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-4">
         <div>
-          <p className="font-display text-2xl font-extrabold tracking-[0.3em] uppercase">
-            {brand.name}
-          </p>
+          <img
+            src="/brand/awaara-logo-white.svg"
+            alt="AWAARA"
+            className="h-8 w-auto"
+          />
           <p className="text-muted-foreground mt-4 max-w-xs text-sm leading-relaxed">
-            Canada's premium desi events & nightlife brand. Live concerts, DJ
+            Canada's premium desi events &amp; nightlife brand. Live concerts, DJ
             nights and unforgettable nights across the country.
           </p>
         </div>
@@ -91,7 +93,7 @@ export function Footer() {
       <div className="border-border/60 border-t">
         <div className="text-muted-foreground mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-2 px-5 py-6 text-xs sm:flex-row sm:px-8">
           <p>
-            © {new Date().getFullYear()} {brand.name} Live Inc. All rights reserved.
+            © {new Date().getFullYear()} {brand.name}. All rights reserved.
           </p>
           <p className="tracking-[0.22em] uppercase">The Night Starts Here.</p>
         </div>

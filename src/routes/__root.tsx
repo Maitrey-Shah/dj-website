@@ -77,16 +77,58 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NOIRÉ — Desi Events & Nightlife in Canada" },
-      { name: "description", content: "Premium desi events and nightlife across Canada." },
-      { property: "og:type", content: "website" },
-],
-    links: [
+      { title: "AWAARA — Premium Desi Events, Concerts & Nightlife in Canada" },
       {
-        rel: "stylesheet",
-        href: appCss,
+        name: "description",
+        content:
+          "AWAARA brings premium Desi concerts, DJ nights, live music and unforgettable nightlife experiences to cities across Canada.",
       },
+      // Open Graph
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "AWAARA" },
+      {
+        property: "og:title",
+        content: "AWAARA — Premium Desi Events, Concerts & Nightlife in Canada",
+      },
+      {
+        property: "og:description",
+        content:
+          "Premium Desi concerts, DJ nights, live events and unforgettable experiences across Canada.",
+      },
+      { property: "og:image", content: "/brand/awaara-og.svg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "AWAARA — Premium Desi Events in Canada" },
+      // Twitter / X
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "AWAARA — Premium Desi Events, Concerts & Nightlife in Canada",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Premium Desi concerts, DJ nights, live events and unforgettable experiences across Canada.",
+      },
+      { name: "twitter:image", content: "/brand/awaara-og.svg" },
+      { name: "twitter:image:alt", content: "AWAARA — Premium Desi Events in Canada" },
+      // SEO keywords
+      {
+        name: "keywords",
+        content:
+          "AWAARA, Desi events Canada, Indian events Canada, Bollywood events Canada, Punjabi events Canada, Desi concerts Toronto, Desi nightlife Toronto, DJ events Canada, Indian concerts Canada, South Asian events Canada",
+      },
+      { name: "theme-color", content: "#231208" },
+    ],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      // Favicon — AWAARA branded SVG (displays in all modern browsers)
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      // Fallback .ico for older browsers
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Apple touch icon
+      { rel: "apple-touch-icon", href: "/brand/awaara-logo-white.svg" },
+      // Fonts
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
