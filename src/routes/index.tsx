@@ -1,24 +1,75 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/site/navbar";
+import { Hero } from "@/components/site/hero";
+import { EventsSection } from "@/components/site/events-section";
+import { FeaturedEvent } from "@/components/site/featured-event";
+import { ArtistsSection } from "@/components/site/artists-section";
+import {
+  ExperienceSection,
+  BrandStory,
+  CitiesSection,
+  GallerySection,
+  SocialStrip,
+} from "@/components/site/moments";
+import {
+  VipSection,
+  PrivateEventsSection,
+  TestimonialsSection,
+  NewsletterSection,
+  FaqSection,
+  ContactSection,
+} from "@/components/site/offerings";
+import { Footer } from "@/components/site/footer";
+import { FloatingWhatsApp } from "@/components/site/whatsapp";
+import { brand, whatsappMessages } from "@/data/site";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      {
+        title: `${brand.name} — Premium Desi Events, Concerts & Nightlife in Canada`,
+      },
+      {
+        name: "description",
+        content:
+          "Bollywood concerts, DJ nights, Punjabi live shows and VIP nightlife across Toronto, Vancouver, Calgary and more. Tickets on sale now.",
+      },
+      { property: "og:title", content: `${brand.name} — The Night Starts Here` },
+      {
+        property: "og:description",
+        content:
+          "Canada's premium desi entertainment experience. Live concerts, global artists, unforgettable nights.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="bg-background text-foreground">
+      <Navbar />
+      <main>
+        <Hero />
+        <EventsSection />
+        <FeaturedEvent />
+        <ArtistsSection />
+        <ExperienceSection />
+        <BrandStory />
+        <CitiesSection />
+        <GallerySection />
+        <SocialStrip />
+        <VipSection />
+        <PrivateEventsSection />
+        <TestimonialsSection />
+        <NewsletterSection />
+        <FaqSection />
+        <ContactSection />
+      </main>
+      <Footer />
+      <FloatingWhatsApp message={whatsappMessages.general} />
     </div>
   );
 }
