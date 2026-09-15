@@ -54,11 +54,36 @@ export const categories = [
 
 export type Category = (typeof categories)[number];
 
+export type TicketStatus = "available" | "low" | "sold-out" | "coming-soon" | "request";
+
 export type TicketTier = {
+  id: string;
   name: string;
-  price: string;
-  availability: string;
+  /** Numeric price in CAD. Use 0 with `fromPrice` for request-only tiers. */
+  amount: number;
+  currency: "CAD";
+  /** Display-only price string, e.g. "From $399 CAD" for table tiers. */
+  fromPrice?: string;
+  description: string;
+  status: TicketStatus;
+  /** Request-only tiers (VIP tables) open an inquiry form instead of checkout. */
+  requestOnly?: boolean;
   benefits: string[];
+};
+
+/** Service fee applied to internal checkout subtotals. */
+export const serviceFeeRate = 0.08;
+
+export function formatCad(amount: number) {
+  return `$${amount.toFixed(2)} CAD`;
+}
+
+export const ticketStatusLabel: Record<TicketStatus, string> = {
+  available: "Available",
+  low: "Low availability",
+  "sold-out": "Sold out",
+  "coming-soon": "Coming soon",
+  request: "By request",
 };
 
 export type EventItem = {
@@ -68,6 +93,8 @@ export type EventItem = {
   date: string; // ISO
   time: string;
   city: string;
+  province: string;
+  country: string;
   venue: string;
   address: string;
   category: Exclude<Category, "All">;
@@ -75,7 +102,8 @@ export type EventItem = {
   longDescription: string;
   image: string;
   artists: string[];
-  ticketUrl: string; // configurable external ticketing link
+  /** Optional external ticketing provider. Empty string = use internal checkout. */
+  ticketUrl: string;
   status: "On Sale" | "Selling Fast" | "Few Left" | "Sold Out";
   featured: boolean;
   dressCode: string;
@@ -85,30 +113,51 @@ export type EventItem = {
 
 const baseTickets: TicketTier[] = [
   {
+    id: "early-bird",
     name: "Early Bird",
-    price: "$29",
-    availability: "Limited",
+    amount: 29.99,
+    currency: "CAD",
+    description: "Limited early access at the lowest price tier.",
+    status: "low",
     benefits: ["General entry", "Lowest price tier", "Transferable"],
   },
   {
+    id: "general",
     name: "General Admission",
-    price: "$45",
-    availability: "On sale",
+    amount: 39.99,
+    currency: "CAD",
+    description: "Standard entry to the main floor.",
+    status: "available",
     benefits: ["General entry", "Coat check access", "Standing floor"],
   },
   {
+    id: "vip",
     name: "VIP",
-    price: "$95",
-    availability: "Selling fast",
+    amount: 79.99,
+    currency: "CAD",
+    description: "Priority entry and lounge access.",
+    status: "available",
     benefits: ["Priority entry", "VIP lounge access", "Dedicated bar", "Welcome drink"],
   },
   {
-    name: "Table",
-    price: "From $650",
-    availability: "By request",
-    benefits: ["Reserved table", "Bottle service", "Host & security", "Group of 6–10"],
+    id: "vip-table",
+    name: "VIP Table",
+    amount: 399,
+    currency: "CAD",
+    fromPrice: "From $399 CAD",
+    description: "Reserved table service for your group.",
+    status: "request",
+    requestOnly: true,
+    benefits: [
+      "Premium table",
+      "Priority entry",
+      "Dedicated service",
+      "Premium seating",
+      "Event access",
+    ],
   },
 ];
+
 
 export const events: EventItem[] = [
   {
