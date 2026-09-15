@@ -29,7 +29,7 @@ export function Footer() {
             ].map((l) => (
               <li key={l.label}>
                 <Link
-                  to={l.to}
+                  to="/"
                   hash={l.hash}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
