@@ -205,7 +205,7 @@ export const events: EventItem[] = [
   },
 ];
 
-export const featuredEvent = events.find((e) => e.featured) ?? events[0];
+export const featuredEvent = (events.find((e) => e.featured) ?? events[0])!;
 
 export function getEvent(slug: string) {
   return events.find((e) => e.slug === slug);
