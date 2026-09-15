@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { brand } from "@/data/site";
 
 const links = [
-  { label: "Home", to: "/", hash: undefined },
+  { label: "Home", to: "/", hash: "top" },
   { label: "Events", to: "/", hash: "events" },
   { label: "Artists", to: "/", hash: "artists" },
   { label: "About", to: "/", hash: "about" },
