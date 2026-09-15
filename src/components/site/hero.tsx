@@ -12,13 +12,14 @@ export function Hero() {
       <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Crowd with hands raised in front of a concert stage lit in deep red"
+          alt="Desi crowd dancing at a Toronto nightclub concert, DJ on stage under red lights with the CN Tower in the distance"
           width={1920}
-          height={1088}
-          className="slow-zoom h-full w-full object-cover"
+          height={1024}
+          className="slow-zoom h-full w-full object-cover object-[70%_center] sm:object-center"
         />
-        <div className="from-background via-background/55 absolute inset-0 bg-gradient-to-t to-transparent" />
-        <div className="from-background/90 absolute inset-0 bg-gradient-to-r to-transparent" />
+        {/* Cinematic overlay: slightly dark top, type-safe middle, deep black bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/35 to-background/95" />
+        <div className="from-background/80 absolute inset-0 bg-gradient-to-r via-background/20 to-transparent" />
       </div>
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-[1400px] flex-col justify-end px-5 pt-32 pb-12 sm:px-8 sm:pb-16">
