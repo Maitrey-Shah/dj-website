@@ -54,11 +54,36 @@ export const categories = [
 
 export type Category = (typeof categories)[number];
 
+export type TicketStatus = "available" | "low" | "sold-out" | "coming-soon" | "request";
+
 export type TicketTier = {
+  id: string;
   name: string;
-  price: string;
-  availability: string;
+  /** Numeric price in CAD. Use 0 with `fromPrice` for request-only tiers. */
+  amount: number;
+  currency: "CAD";
+  /** Display-only price string, e.g. "From $399 CAD" for table tiers. */
+  fromPrice?: string;
+  description: string;
+  status: TicketStatus;
+  /** Request-only tiers (VIP tables) open an inquiry form instead of checkout. */
+  requestOnly?: boolean;
   benefits: string[];
+};
+
+/** Service fee applied to internal checkout subtotals. */
+export const serviceFeeRate = 0.08;
+
+export function formatCad(amount: number) {
+  return `$${amount.toFixed(2)} CAD`;
+}
+
+export const ticketStatusLabel: Record<TicketStatus, string> = {
+  available: "Available",
+  low: "Low availability",
+  "sold-out": "Sold out",
+  "coming-soon": "Coming soon",
+  request: "By request",
 };
 
 export type EventItem = {
@@ -68,6 +93,8 @@ export type EventItem = {
   date: string; // ISO
   time: string;
   city: string;
+  province: string;
+  country: string;
   venue: string;
   address: string;
   category: Exclude<Category, "All">;
@@ -75,7 +102,8 @@ export type EventItem = {
   longDescription: string;
   image: string;
   artists: string[];
-  ticketUrl: string; // configurable external ticketing link
+  /** Optional external ticketing provider. Empty string = use internal checkout. */
+  ticketUrl: string;
   status: "On Sale" | "Selling Fast" | "Few Left" | "Sold Out";
   featured: boolean;
   dressCode: string;
@@ -85,30 +113,51 @@ export type EventItem = {
 
 const baseTickets: TicketTier[] = [
   {
+    id: "early-bird",
     name: "Early Bird",
-    price: "$29",
-    availability: "Limited",
+    amount: 29.99,
+    currency: "CAD",
+    description: "Limited early access at the lowest price tier.",
+    status: "low",
     benefits: ["General entry", "Lowest price tier", "Transferable"],
   },
   {
+    id: "general",
     name: "General Admission",
-    price: "$45",
-    availability: "On sale",
+    amount: 39.99,
+    currency: "CAD",
+    description: "Standard entry to the main floor.",
+    status: "available",
     benefits: ["General entry", "Coat check access", "Standing floor"],
   },
   {
+    id: "vip",
     name: "VIP",
-    price: "$95",
-    availability: "Selling fast",
+    amount: 79.99,
+    currency: "CAD",
+    description: "Priority entry and lounge access.",
+    status: "available",
     benefits: ["Priority entry", "VIP lounge access", "Dedicated bar", "Welcome drink"],
   },
   {
-    name: "Table",
-    price: "From $650",
-    availability: "By request",
-    benefits: ["Reserved table", "Bottle service", "Host & security", "Group of 6–10"],
+    id: "vip-table",
+    name: "VIP Table",
+    amount: 399,
+    currency: "CAD",
+    fromPrice: "From $399 CAD",
+    description: "Reserved table service for your group.",
+    status: "request",
+    requestOnly: true,
+    benefits: [
+      "Premium table",
+      "Priority entry",
+      "Dedicated service",
+      "Premium seating",
+      "Event access",
+    ],
   },
 ];
+
 
 export const events: EventItem[] = [
   {
@@ -118,6 +167,8 @@ export const events: EventItem[] = [
     date: "2026-09-26",
     time: "10:00 PM – 3:00 AM",
     city: "Toronto",
+    province: "Ontario",
+    country: "Canada",
     venue: "REBEL Warehouse",
     address: "11 Polson St, Toronto, ON",
     category: "DJ Nights",
@@ -127,7 +178,7 @@ export const events: EventItem[] = [
       "Three rooms, three sounds, one night. Ignite the Night brings together Toronto's sharpest desi selectors for a warehouse takeover with a full laser and CO2 production. Expect Punjabi anthems on the main floor, Bollywood throwbacks in room two and Afro-desi fusion on the terrace.",
     image: event1,
     artists: ["DJ RAAVI", "Simar Kaur", "Noor Bains"],
-    ticketUrl: "https://example-ticketing.com/ignite-the-night",
+    ticketUrl: "",
     status: "Selling Fast",
     featured: true,
     dressCode: "Smart night out. No athletic wear.",
@@ -141,6 +192,8 @@ export const events: EventItem[] = [
     date: "2026-10-11",
     time: "8:00 PM – 1:00 AM",
     city: "Vancouver",
+    province: "British Columbia",
+    country: "Canada",
     venue: "Queen Elizabeth Theatre",
     address: "630 Hamilton St, Vancouver, BC",
     category: "Punjabi",
@@ -150,7 +203,7 @@ export const events: EventItem[] = [
       "Pind Sessions is our live concert series built around Punjabi songwriting. A ten-piece band, a dhol section and a headline vocalist perform a career-spanning set, followed by an after-party in the upper lounge.",
     image: event2,
     artists: ["Noor Bains", "The Pind Collective"],
-    ticketUrl: "https://example-ticketing.com/pind-sessions",
+    ticketUrl: "",
     status: "On Sale",
     featured: false,
     dressCode: "Anything you can dance in.",
@@ -164,6 +217,8 @@ export const events: EventItem[] = [
     date: "2026-08-29",
     time: "7:00 PM – 2:00 AM",
     city: "Toronto",
+    province: "Ontario",
+    country: "Canada",
     venue: "Lavelle Rooftop",
     address: "627 King St W, Toronto, ON",
     category: "Special Events",
@@ -173,7 +228,7 @@ export const events: EventItem[] = [
       "Our summer rooftop series takes over one of the city's best terraces. Golden-hour house, a desi-fusion peak-time set and a skyline you'll be posting all weekend.",
     image: event3,
     artists: ["DJ RAAVI", "Kabir Sound System"],
-    ticketUrl: "https://example-ticketing.com/skyline-rooftop",
+    ticketUrl: "",
     status: "Few Left",
     featured: false,
     dressCode: "Rooftop chic.",
@@ -187,6 +242,8 @@ export const events: EventItem[] = [
     date: "2026-11-15",
     time: "9:00 PM – 2:30 AM",
     city: "Calgary",
+    province: "Alberta",
+    country: "Canada",
     venue: "The Grand Ballroom",
     address: "608 1 St SW, Calgary, AB",
     category: "Bollywood",
@@ -196,7 +253,7 @@ export const events: EventItem[] = [
       "A themed ballroom night with masks, live percussion, a choreographed dance showcase at midnight and a soundtrack running from 90s Bollywood to today's chart-toppers.",
     image: event4,
     artists: ["Simar Kaur", "DJ Meher"],
-    ticketUrl: "https://example-ticketing.com/bollywood-masquerade",
+    ticketUrl: "",
     status: "On Sale",
     featured: false,
     dressCode: "Black tie with a mask. Masks available at the door.",
