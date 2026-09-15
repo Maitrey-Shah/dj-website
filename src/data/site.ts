@@ -354,8 +354,6 @@ export const testimonials = [
       "Best desi night I've been to in Canada, full stop. The production genuinely felt like a festival, not a club night.",
     name: "Aman S.",
     city: "Toronto",
-    province: "Ontario",
-    country: "Canada",
     event: "Ignite the Night",
   },
   {
@@ -363,8 +361,6 @@ export const testimonials = [
       "We booked a VIP table for my sister's birthday. The host looked after us all night and the sparklers came out at exactly the right moment.",
     name: "Priya M.",
     city: "Calgary",
-    province: "Alberta",
-    country: "Canada",
     event: "Bollywood Masquerade",
   },
   {
@@ -372,8 +368,6 @@ export const testimonials = [
       "The live band on Pind Sessions was unreal. Three generations of my family were on their feet.",
     name: "Harjit G.",
     city: "Vancouver",
-    province: "British Columbia",
-    country: "Canada",
     event: "Punjabi Live",
   },
   {
