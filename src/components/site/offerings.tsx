@@ -135,7 +135,8 @@ export function PrivateEventsSection() {
 
 export function TestimonialsSection() {
   const [i, setI] = useState(0);
-  const t = testimonials[i];
+  const t = testimonials[i]!;
+
 
   return (
     <section className="bg-surface/40 border-border/60 border-y py-20 sm:py-28">
