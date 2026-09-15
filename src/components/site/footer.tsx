@@ -20,12 +20,12 @@ export function Footer() {
           <p className="eyebrow mb-4">Explore</p>
           <ul className="space-y-2.5 text-sm">
             {[
-              { label: "Home", to: "/" as const },
-              { label: "Events", to: "/" as const, hash: "events" },
-              { label: "Artists", to: "/" as const, hash: "artists" },
-              { label: "About", to: "/" as const, hash: "about" },
-              { label: "Gallery", to: "/" as const, hash: "gallery" },
-              { label: "Contact", to: "/" as const, hash: "contact" },
+              { label: "Home", hash: "top" },
+              { label: "Events", hash: "events" },
+              { label: "Artists", hash: "artists" },
+              { label: "About", hash: "about" },
+              { label: "Gallery", hash: "gallery" },
+              { label: "Contact", hash: "contact" },
             ].map((l) => (
               <li key={l.label}>
                 <Link

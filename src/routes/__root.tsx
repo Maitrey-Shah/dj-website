@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "NOIRÉ — Desi Events & Nightlife in Canada" },
       { name: "description", content: "Premium desi events and nightlife across Canada." },
       { property: "og:type", content: "website" },
-términos    ],
+],
     links: [
       {
         rel: "stylesheet",
