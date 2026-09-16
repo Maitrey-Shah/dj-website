@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Instagram, Star } from "lucide-react";
 import {
   Accordion,
@@ -17,6 +17,7 @@ import {
 } from "@/data/site";
 import { WhatsAppIcon } from "@/components/site/whatsapp";
 import { Reveal, SectionHeading } from "@/components/site/reveal";
+import { trackEvent } from "@/lib/analytics";
 
 /* ---------------- VIP ---------------- */
 
@@ -34,7 +35,7 @@ export function VipSection() {
       </div>
       <div className="relative mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-36">
         <SectionHeading
-          eyebrow="Tables • Bottle service • Suites"
+          eyebrow="Tables â€¢ Bottle service â€¢ Suites"
           title={
             <>
               Make it
@@ -55,7 +56,7 @@ export function VipSection() {
               "Corporate events",
             ].map((f) => (
               <li key={f} className="border-border/40 flex items-center gap-3 border-b py-2.5">
-                <span className="text-gold">★</span> {f}
+                <span className="text-gold">â˜…</span> {f}
               </li>
             ))}
           </ul>
@@ -64,6 +65,7 @@ export function VipSection() {
               href={whatsappLink(whatsappMessages.vip)}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent("vip_inquiry", { source: "vip_section" })}
               className="bg-heat text-primary-foreground rounded-full px-8 py-4 text-center text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.03]"
             >
               Book VIP
@@ -72,6 +74,7 @@ export function VipSection() {
               href={whatsappLink(whatsappMessages.vip)}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent("click_whatsapp", { source: "vip_section" })}
               className="border-border/70 hover:bg-surface-2 inline-flex items-center justify-center gap-2 rounded-full border px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-colors"
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp Us
@@ -98,7 +101,7 @@ export function PrivateEventsSection() {
               <span className="text-heat">Our energy.</span>
             </>
           }
-          subtitle="From boardroom to ballroom — we produce the whole thing: artists, venue, production and hospitality."
+          subtitle="From boardroom to ballroom â€” we produce the whole thing: artists, venue, production and hospitality."
         />
         <Reveal delay={120}>
           <ul className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:text-base">
@@ -134,52 +137,129 @@ export function PrivateEventsSection() {
 /* ---------------- Testimonials ---------------- */
 
 export function TestimonialsSection() {
-  const [i, setI] = useState(0);
-  const t = testimonials[i]!;
+  const [i, setI] = useState(1);
+  const [transition, setTransition] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [timerKey, setTimerKey] = useState(0);
+  const timerRef = useRef<number | null>(null);
+  const touchRef = useRef({ x: 0, y: 0 });
+  const reducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const slides = [testimonials[testimonials.length - 1]!, ...testimonials, testimonials[0]!];
+  const active = (i - 1 + testimonials.length) % testimonials.length;
 
+  const goTo = (nextIndex: number) => {
+    setTransition(!reducedMotion);
+    setI(nextIndex);
+    setTimerKey((v) => v + 1);
+  };
+
+  const next = () => goTo(i + 1);
+  const prev = () => goTo(i - 1);
+
+  useEffect(() => {
+    if (timerRef.current) window.clearInterval(timerRef.current);
+    if (!paused && !reducedMotion) {
+      timerRef.current = window.setInterval(() => setI((v) => v + 1), 3500);
+    }
+    return () => {
+      if (timerRef.current) window.clearInterval(timerRef.current);
+    };
+  }, [paused, reducedMotion, timerKey]);
 
   return (
     <section className="bg-surface/40 border-border/60 border-y py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-5 text-center sm:px-8">
         <SectionHeading eyebrow="Word of mouth" title="What the night said" align="center" />
         <Reveal delay={100} className="mt-10">
-          <p className="text-gold flex justify-center gap-1">
-            {Array.from({ length: 5 }, (_, s) => (
-              <Star key={s} className="h-4 w-4 fill-current" />
+          <div
+            className="overflow-hidden"
+            aria-label="Testimonials carousel"
+            aria-live="polite"
+            tabIndex={0}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowRight") next();
+              if (e.key === "ArrowLeft") prev();
+            }}
+            onTouchStart={(e) => {
+              touchRef.current = { x: e.touches[0]?.clientX ?? 0, y: e.touches[0]?.clientY ?? 0 };
+            }}
+            onTouchEnd={(e) => {
+              const dx = (e.changedTouches[0]?.clientX ?? 0) - touchRef.current.x;
+              const dy = (e.changedTouches[0]?.clientY ?? 0) - touchRef.current.y;
+              if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+                dx < 0 ? next() : prev();
+              }
+            }}
+          >
+          <div
+            className="flex"
+            style={{
+              transform: `translateX(-${i * 100}%)`,
+              transition: transition && !reducedMotion ? "transform 600ms ease-in-out" : "none",
+            }}
+            onTransitionEnd={() => {
+              if (i === testimonials.length + 1) {
+                setTransition(false);
+                setI(1);
+                requestAnimationFrame(() => setTransition(true));
+              }
+              if (i === 0) {
+                setTransition(false);
+                setI(testimonials.length);
+                requestAnimationFrame(() => setTransition(true));
+              }
+            }}
+          >
+            {slides.map((t, slide) => (
+              <div
+                key={`${t.name}-${slide}`}
+                className="min-w-full shrink-0"
+                aria-hidden={slide !== i}
+              >
+                <p className="text-gold flex justify-center gap-1">
+                  {Array.from({ length: 5 }, (_, s) => (
+                    <Star key={s} className="h-4 w-4 fill-current" />
+                  ))}
+                </p>
+                <blockquote className="mt-6 text-xl leading-relaxed font-medium sm:text-2xl">
+                  "{t.quote}"
+                </blockquote>
+                <p className="eyebrow mt-6">
+                  {t.name} • {t.city} • {t.event}
+                </p>
+              </div>
             ))}
-          </p>
-          <blockquote className="mt-6 text-xl leading-relaxed font-medium sm:text-2xl">
-            "{t.quote}"
-          </blockquote>
-          <p className="eyebrow mt-6">
-            {t.name} • {t.city} • {t.event}
-          </p>
+          </div>
           <div className="mt-8 flex justify-center gap-2">
             {testimonials.map((_, d) => (
               <button
                 key={d}
                 type="button"
-                aria-label={`Testimonial ${d + 1}`}
-                onClick={() => setI(d)}
+                aria-label={`Show testimonial ${d + 1}`}
+                onClick={() => goTo(d + 1)}
                 className={
-                  d === i
+                  d === active
                     ? "bg-heat h-2 w-8 rounded-full transition-all"
                     : "bg-surface-2 h-2 w-2 rounded-full transition-all"
                 }
               />
             ))}
           </div>
+          </div>
         </Reveal>
       </div>
     </section>
   );
 }
-
 /* ---------------- Newsletter ---------------- */
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
+  const [message, setMessage] = useState("");
 
   return (
     <section className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-28">
@@ -188,19 +268,28 @@ export function NewsletterSection() {
         <p className="text-muted-foreground mx-auto mt-4 max-w-md">
           Get early access to tickets, artist announcements and upcoming events.
         </p>
-        {done ? (
+        {message ? (
           <p className="text-gold mt-8 text-sm font-semibold tracking-[0.18em] uppercase">
-            You're on the list. See you in the front row.
+            {message}
           </p>
         ) : (
           <form
             className="mt-8 flex flex-col gap-3 sm:flex-row"
             onSubmit={(e) => {
               e.preventDefault();
-              if (email.trim()) setDone(true);
+              const valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+              setMessage(
+                valid
+                  ? "Newsletter signup needs a configured email service before launch."
+                  : "Enter a valid email address.",
+              );
             }}
           >
+            <label className="sr-only" htmlFor="newsletterEmail">
+              Email address
+            </label>
             <input
+              id="newsletterEmail"
               type="email"
               required
               value={email}
@@ -226,7 +315,7 @@ export function NewsletterSection() {
 
 export function FaqSection() {
   return (
-    <section className="mx-auto max-w-[1400px] px-5 pb-20 sm:px-8 sm:pb-28">
+    <section id="faq" className="mx-auto max-w-[1400px] scroll-mt-24 px-5 pb-20 sm:px-8 sm:pb-28">
       <SectionHeading eyebrow="Good to know" title="Questions, answered" />
       <Reveal delay={100} className="mt-10 max-w-3xl">
         <Accordion type="single" collapsible className="gap-0">
@@ -252,7 +341,8 @@ const inputCls =
   "border-input bg-background/60 placeholder:text-muted-foreground/60 w-full rounded-lg border px-4 py-3.5 text-sm outline-none focus:ring-1 focus:ring-current";
 
 export function ContactSection() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   return (
     <section
@@ -270,7 +360,7 @@ export function ContactSection() {
                 it happen.
               </>
             }
-            subtitle="General inquiries, bookings, VIP, artists or partnerships — reach the right desk."
+            subtitle="General inquiries, bookings, VIP, artists or partnerships â€” reach the right desk."
           />
           <Reveal delay={120} className="mt-10 space-y-6">
             <div>
@@ -311,38 +401,63 @@ export function ContactSection() {
         </div>
 
         <Reveal delay={160}>
-          {sent ? (
+          {status ? (
             <div className="border-border/70 flex h-full min-h-[420px] flex-col items-center justify-center rounded-xl border p-10 text-center">
               <p className="text-heat font-display text-4xl font-extrabold uppercase">
-                Message sent.
+                Inquiry not sent yet.
               </p>
               <p className="text-muted-foreground mt-4">
-                Our team will get back to you within 24 hours.
+                {status}
               </p>
+              <button
+                type="button"
+                onClick={() => setStatus("")}
+                className="border-border/70 hover:bg-surface-2 mt-6 rounded-full border px-7 py-3 text-xs font-bold tracking-[0.22em] uppercase"
+              >
+                Edit Inquiry
+              </button>
             </div>
           ) : (
             <form
               className="grid gap-4"
               onSubmit={(e) => {
                 e.preventDefault();
-                setSent(true);
+                if (submitting) return;
+                const form = new FormData(e.currentTarget);
+                const email = String(form.get("email") ?? "").trim();
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+                  setStatus("Please enter a valid email address.");
+                  return;
+                }
+                setSubmitting(true);
+                trackEvent("submit_contact_form", { configured: false });
+                setStatus(
+                  "A contact form backend is not configured yet. Connect an email, CRM, or form service before production launch.",
+                );
+                setSubmitting(false);
               }}
             >
               <div className="grid gap-4 sm:grid-cols-2">
-                <input required placeholder="Name" aria-label="Name" className={inputCls} />
+                <label className="sr-only" htmlFor="contactName">Name</label>
+                <input id="contactName" name="name" required placeholder="Name" className={inputCls} />
+                <label className="sr-only" htmlFor="contactEmail">Email</label>
                 <input
+                  id="contactEmail"
+                  name="email"
                   required
                   type="email"
                   placeholder="Email"
-                  aria-label="Email"
                   className={inputCls}
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <input placeholder="Phone" aria-label="Phone" className={inputCls} />
-                <input placeholder="City" aria-label="City" className={inputCls} />
+                <label className="sr-only" htmlFor="contactPhone">Phone</label>
+                <input id="contactPhone" name="phone" placeholder="Phone" className={inputCls} />
+                <label className="sr-only" htmlFor="contactCity">City</label>
+                <input id="contactCity" name="city" placeholder="City" className={inputCls} />
               </div>
-              <select required defaultValue="" aria-label="Inquiry type" className={inputCls}>
+              <label className="sr-only" htmlFor="contactInquiry">Inquiry type</label>
+              <select id="contactInquiry" name="inquiryType" required defaultValue="" className={inputCls}>
                 <option value="" disabled>
                   Inquiry Type
                 </option>
@@ -352,18 +467,22 @@ export function ContactSection() {
                   </option>
                 ))}
               </select>
+              <label className="sr-only" htmlFor="contactMessage">Message</label>
               <textarea
+                id="contactMessage"
+                name="message"
                 required
                 placeholder="Message"
-                aria-label="Message"
                 rows={5}
                 className={inputCls}
               />
               <button
                 type="submit"
                 className="bg-heat text-primary-foreground mt-2 rounded-full px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.02]"
+                disabled={submitting}
+                aria-disabled={submitting}
               >
-                Send Inquiry
+                {submitting ? "Sending..." : "Send Inquiry"}
               </button>
             </form>
           )}

@@ -27,6 +27,7 @@ export function Footer() {
               { label: "Artists", hash: "artists" },
               { label: "About", hash: "about" },
               { label: "Gallery", hash: "gallery" },
+              { label: "FAQ", hash: "faq" },
               { label: "Contact", hash: "contact" },
             ].map((l) => (
               <li key={l.label}>
@@ -76,11 +77,16 @@ export function Footer() {
         <div>
           <p className="eyebrow mb-4">Legal</p>
           <ul className="space-y-2.5 text-sm">
-            {["Privacy Policy", "Terms & Conditions", "Refund Policy"].map((l) => (
-              <li key={l}>
-                <span className="text-muted-foreground">{l}</span>
-              </li>
-            ))}
+            <li>
+              <Link to="/privacy-policy" className="text-muted-foreground hover:text-foreground transition-colors">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
+                Terms & Conditions
+              </Link>
+            </li>
           </ul>
           <p className="text-muted-foreground mt-6 text-xs leading-relaxed">
             {brand.email}

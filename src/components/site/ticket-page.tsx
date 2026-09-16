@@ -20,6 +20,7 @@ import {
 } from "@/data/site";
 import { WhatsAppIcon } from "@/components/site/whatsapp";
 import { formatDate } from "@/components/site/event-card";
+import { trackEvent } from "@/lib/analytics";
 
 type Quantities = Record<string, number>;
 
@@ -487,13 +488,16 @@ function CheckoutForm({ total, waEvent }: { total: number; waEvent: string }) {
 }
 
 function VipRequestForm({ eventTitle, waVip }: { eventTitle: string; waVip: string }) {
-  const [sent, setSent] = useState(false);
+  const [message, setMessage] = useState("");
 
   return (
     <form
       onSubmit={(ev) => {
         ev.preventDefault();
-        setSent(true);
+        trackEvent("vip_inquiry", { source: "ticket_page", event: eventTitle, configured: false });
+        setMessage(
+          "VIP form delivery is not configured yet. Use WhatsApp to send this request now, or connect a form/CRM service before production launch.",
+        );
       }}
       className="border-border/70 bg-surface mt-8 space-y-4 rounded-xl border p-6"
     >
@@ -528,9 +532,9 @@ function VipRequestForm({ eventTitle, waVip }: { eventTitle: string; waVip: stri
           <WhatsAppIcon className="h-4 w-4" /> WhatsApp VIP booking
         </a>
       </div>
-      {sent ? (
+      {message ? (
         <p className="text-gold text-sm">
-          Request received. Our VIP host will contact you within 24 hours.
+          {message}
         </p>
       ) : null}
     </form>

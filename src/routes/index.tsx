@@ -22,26 +22,21 @@ import {
 import { Footer } from "@/components/site/footer";
 import { FloatingWhatsApp } from "@/components/site/whatsapp";
 import { brand, whatsappMessages } from "@/data/site";
+import { canonical, eventsJsonLd, pageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
+    meta: pageMeta({
+      title: `${brand.name} — Desi Events, Concerts & Nightlife in Canada`,
+      description:
+        "Discover premium Desi concerts, DJ nights, live music and unforgettable nightlife experiences with AWAARA across Canada.",
+    }),
+    links: [canonical("/")],
+    scripts: [
       {
-        title: `${brand.name} — Premium Desi Events, Concerts & Nightlife in Canada`,
+        type: "application/ld+json",
+        children: JSON.stringify(eventsJsonLd()),
       },
-      {
-        name: "description",
-        content:
-          "Bollywood concerts, DJ nights, Punjabi live shows and VIP nightlife across Toronto, Vancouver, Calgary and more. Tickets on sale now.",
-      },
-      { property: "og:title", content: `${brand.name} — The Night Starts Here` },
-      {
-        property: "og:description",
-        content:
-          "Canada's premium desi entertainment experience. Live concerts, global artists, unforgettable nights.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,

@@ -413,27 +413,19 @@ export const testimonials = [
 ];
 
 export const faqs = [
-  {
-    q: "Where can I buy tickets?",
-    a: "Every event page links straight to our ticketing partner. Tickets are only valid when bought through the official link — we never sell at the door unless an event says so.",
-  },
-  {
-    q: "Are tickets refundable?",
-    a: "Tickets are non-refundable but transferable up to 24 hours before doors. If an event is cancelled or rescheduled, you get a full refund or a transfer to the new date.",
-  },
-  { q: "What is the age requirement?", a: "Most events are 19+. Any all-ages event is clearly marked on its event page." },
-  { q: "Do I need ID?", a: "Yes. Valid government-issued photo ID is required at every 19+ event, no exceptions." },
-  {
-    q: "How do VIP tables work?",
-    a: "VIP tables include reserved seating, bottle service, priority entry and a dedicated host. Message us on WhatsApp and we'll confirm availability and pricing for your date.",
-  },
-  { q: "Can I book a private event?", a: "Absolutely. We produce private parties, corporate nights, university events and brand activations across Canada." },
-  { q: "How do I contact the event team?", a: "WhatsApp is fastest. You can also use the inquiry form below or email us directly." },
-  { q: "Do you offer group bookings?", a: "Yes — groups of 10 or more get discounted entry and a reserved area where the venue allows it." },
-  { q: "Which cities do you operate in?", a: "Toronto, Vancouver, Calgary, Edmonton, Ottawa, Montreal and Winnipeg, with tour dates added regularly." },
-  { q: "How can artists or DJs collaborate with you?", a: "Send your press kit and links through the contact form with 'Artist Booking' selected and our talent team will get back to you." },
+  { q: "Where can I buy tickets?", a: "Use the Get Tickets button on the relevant event page. Event-specific details are provided on the individual event page." },
+  { q: "Are tickets refundable?", a: "Refund rules depend on the specific event and ticket provider. Event-specific details are provided on the individual event page." },
+  { q: "How do I receive my ticket?", a: "Ticket delivery depends on the checkout provider used for the event. Event-specific details are provided on the individual event page." },
+  { q: "What happens if an event is cancelled?", a: "Cancellation instructions are shared through the official event or ticketing channel. Event-specific details are provided on the individual event page." },
+  { q: "Are events 19+ / age restricted?", a: "Many nightlife events are 19+, but age rules vary. Event-specific details are provided on the individual event page." },
+  { q: "What ID is required?", a: "For age-restricted events, bring valid government-issued photo ID. Event-specific details are provided on the individual event page." },
+  { q: "Can I transfer my ticket?", a: "Transfer rules depend on the event and ticket provider. Event-specific details are provided on the individual event page." },
+  { q: "What time should I arrive?", a: "Arrival guidance depends on doors, venue policy and ticket tier. Event-specific details are provided on the individual event page." },
+  { q: "Do you offer VIP tables?", a: "VIP table availability depends on the event and venue. Use Book VIP or WhatsApp to request current options." },
+  { q: "How can I contact AWAARA?", a: "Use the contact form, email, or WhatsApp button. WhatsApp is the fastest option for event and VIP questions." },
+  { q: "Where are events located?", a: "AWAARA events are listed by city on the event page. Event-specific details are provided on the individual event page." },
+  { q: "Can event details change?", a: "Yes. Artists, venues, times, age rules and ticket details can change when required. Always check the individual event page before attending." },
 ];
-
 export const inquiryTypes = [
   "General Inquiries",
   "Event Bookings",

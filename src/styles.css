@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * NOIRÉ — premium Canadian desi nightlife design system.
+ * AWAARA — premium Canadian desi nightlife design system.
  * Dark-only. All colours are oklch tokens. Never hardcode colours in components.
  */
 
@@ -205,7 +205,7 @@
 }
 
 @utility marquee {
-  animation: marquee-x 28s linear infinite;
+  animation: marquee-x 22s linear infinite;
 }
 
 
@@ -213,7 +213,7 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    animation: none !important;
     transition-duration: 0.01ms !important;
   }
 }

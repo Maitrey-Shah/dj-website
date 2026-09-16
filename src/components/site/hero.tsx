@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowDown } from "lucide-react";
 import { heroSlides, featuredEvent, brand } from "@/data/site";
+import { trackEvent } from "@/lib/analytics";
 
 const SLIDE_DURATION = 5000; // ms each slide stays visible
 const FADE_DURATION = 800;   // ms for the CSS crossfade transition
@@ -113,6 +114,7 @@ export function Hero() {
           <Link
             to="/"
             hash="events"
+            onClick={() => trackEvent("click_explore_events", { source: "hero" })}
             className="border-border/70 hover:bg-surface-2 rounded-full border px-8 py-4 text-center text-xs font-bold tracking-[0.22em] uppercase transition-colors"
           >
             Explore Events
@@ -122,6 +124,7 @@ export function Hero() {
               href={featuredEvent.ticketUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent("click_get_tickets", { source: "hero", event: featuredEvent.slug })}
               className="bg-heat text-primary-foreground glow rounded-full px-8 py-4 text-center text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.03]"
             >
               Get Tickets
@@ -130,6 +133,7 @@ export function Hero() {
             <Link
               to="/events/$slug/tickets"
               params={{ slug: featuredEvent.slug }}
+              onClick={() => trackEvent("click_get_tickets", { source: "hero", event: featuredEvent.slug })}
               className="bg-heat text-primary-foreground glow rounded-full px-8 py-4 text-center text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.03]"
             >
               Get Tickets

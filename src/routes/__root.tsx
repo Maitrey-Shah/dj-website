@@ -11,22 +11,38 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { CookieConsent } from "@/components/site/cookie-consent";
+import {
+  canonical,
+  organizationJsonLd,
+  pageMeta,
+  websiteJsonLd,
+} from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+    <div className="grain flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="max-w-xl text-center">
+        <p className="eyebrow">404</p>
+        <h1 className="font-display mt-4 text-5xl font-extrabold uppercase text-foreground sm:text-7xl">
+          Lost in the night?
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <div className="mt-6">
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            hash="events"
+            className="bg-heat inline-flex items-center justify-center rounded-full px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-primary-foreground"
           >
-            Go home
+            Explore Events
+          </Link>
+          <Link
+            to="/"
+            className="inline-flex items-center justify-center rounded-full border border-border/70 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-surface-2"
+          >
+            Go Home
           </Link>
         </div>
       </div>
@@ -77,41 +93,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AWAARA — Premium Desi Events, Concerts & Nightlife in Canada" },
-      {
-        name: "description",
-        content:
-          "AWAARA brings premium Desi concerts, DJ nights, live music and unforgettable nightlife experiences to cities across Canada.",
-      },
-      // Open Graph
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "AWAARA" },
-      {
-        property: "og:title",
-        content: "AWAARA — Premium Desi Events, Concerts & Nightlife in Canada",
-      },
-      {
-        property: "og:description",
-        content:
-          "Premium Desi concerts, DJ nights, live events and unforgettable experiences across Canada.",
-      },
-      { property: "og:image", content: "/brand/awaara-og.svg" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "AWAARA — Premium Desi Events in Canada" },
-      // Twitter / X
-      { name: "twitter:card", content: "summary_large_image" },
-      {
-        name: "twitter:title",
-        content: "AWAARA — Premium Desi Events, Concerts & Nightlife in Canada",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Premium Desi concerts, DJ nights, live events and unforgettable experiences across Canada.",
-      },
-      { name: "twitter:image", content: "/brand/awaara-og.svg" },
-      { name: "twitter:image:alt", content: "AWAARA — Premium Desi Events in Canada" },
+      ...pageMeta({
+        title: "AWAARA — Desi Events, Concerts & Nightlife in Canada",
+        description:
+          "Discover premium Desi concerts, DJ nights, live music and unforgettable nightlife experiences with AWAARA across Canada.",
+      }),
       // SEO keywords
       {
         name: "keywords",
@@ -122,18 +108,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      canonical("/"),
       // Favicon — AWAARA branded SVG (displays in all modern browsers)
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/brand/awaara-favicon.svg", type: "image/svg+xml" },
       // Fallback .ico for older browsers
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       // Apple touch icon
-      { rel: "apple-touch-icon", href: "/brand/awaara-logo-white.svg" },
+      { rel: "apple-touch-icon", href: "/brand/awaara-apple-touch-icon.png" },
       // Fonts
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify([websiteJsonLd(), organizationJsonLd()]),
       },
     ],
   }),
@@ -164,6 +157,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <CookieConsent />
     </QueryClientProvider>
   );
 }

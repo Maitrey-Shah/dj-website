@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { trackEvent } from "@/lib/analytics";
 import { ArrowUpRight, CalendarDays, MapPin } from "lucide-react";
 import type { EventItem } from "@/data/site";
 
@@ -11,6 +12,7 @@ function GetTicketsCta({ event, className }: { event: EventItem; className: stri
         href={event.ticketUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackEvent("click_get_tickets", { source: "event_card", event: event.slug })}
         className={className}
       >
         Get Tickets
@@ -21,6 +23,7 @@ function GetTicketsCta({ event, className }: { event: EventItem; className: stri
     <Link
       to="/events/$slug/tickets"
       params={{ slug: event.slug }}
+      onClick={() => trackEvent("click_get_tickets", { source: "event_card", event: event.slug })}
       className={className}
     >
       Get Tickets

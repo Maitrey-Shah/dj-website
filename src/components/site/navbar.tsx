@@ -9,6 +9,7 @@ const links = [
   { label: "Artists", to: "/", hash: "artists" },
   { label: "About", to: "/", hash: "about" },
   { label: "Gallery", to: "/", hash: "gallery" },
+  { label: "FAQ", to: "/", hash: "faq" },
   { label: "Contact", to: "/", hash: "contact" },
 ] as const;
 
@@ -42,15 +43,13 @@ export function Navbar() {
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-4 sm:px-8">
         <Link
           to="/"
-          className="shrink-0"
+          className="flex shrink-0 items-center"
           aria-label="AWAARA — home"
         >
           <img
             src="/brand/awaara-logo-white.svg"
             alt="AWAARA"
-            height={40}
-            className="h-9 w-auto sm:h-10"
-            style={{ filter: "drop-shadow(0 0 8px rgba(0,0,0,0.4))" }}
+            className="h-auto w-[96px] sm:w-[116px]"
           />
         </Link>
 
@@ -100,7 +99,7 @@ export function Navbar() {
           <img
             src="/brand/awaara-logo-white.svg"
             alt="AWAARA"
-            className="h-8 w-auto"
+            className="h-auto w-[100px]"
           />
         </Link>
         {links.map((l, i) => (

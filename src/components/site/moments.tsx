@@ -69,8 +69,8 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   }, [inView, value]);
 
   return (
-    <div ref={ref} className="text-center sm:text-left">
-      <p className="font-display text-heat text-5xl font-extrabold tabular-nums sm:text-6xl">
+    <div ref={ref}>
+      <p className="font-display text-heat text-4xl leading-none font-extrabold tabular-nums sm:text-5xl xl:text-6xl">
         {n}
         {suffix}
       </p>
@@ -111,16 +111,14 @@ export function BrandStory() {
                 compromise.
               </p>
             </div>
-            <div className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-4">
+            <div className="mt-10 grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-4 lg:gap-x-12">
               {stats.map((s) => (
-                <Counter key={s.label} value={s.value} suffix={s.suffix} />
-              ))}
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-8 sm:grid-cols-4">
-              {stats.map((s) => (
-                <p key={s.label} className="text-muted-foreground text-[0.65rem] tracking-[0.22em] uppercase">
-                  {s.label}
-                </p>
+                <div key={s.label} className="min-w-0">
+                  <Counter value={s.value} suffix={s.suffix} />
+                  <p className="text-muted-foreground mt-3 text-[0.65rem] tracking-[0.22em] uppercase">
+                    {s.label}
+                  </p>
+                </div>
               ))}
             </div>
           </Reveal>
