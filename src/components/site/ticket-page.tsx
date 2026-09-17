@@ -29,7 +29,6 @@ const MAX_PER_TIER = 10;
 export function TicketPage({ slug }: { slug: string }) {
   const e = getEvent(slug);
   const [qty, setQty] = useState<Quantities>({});
-  const [stage, setStage] = useState<"select" | "checkout">("select");
   const [vipOpen, setVipOpen] = useState(false);
 
   const tiers = e?.tickets ?? [];
@@ -54,15 +53,13 @@ export function TicketPage({ slug }: { slug: string }) {
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
-            to="/"
-            hash="events"
+            to="/tickets"
             className="bg-heat text-primary-foreground rounded-full px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase"
           >
             View All Events
           </Link>
           <Link
             to="/"
-            hash="top"
             className="border-border/70 hover:bg-surface-2 rounded-full border px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-colors"
           >
             Back Home
@@ -83,13 +80,14 @@ export function TicketPage({ slug }: { slug: string }) {
   );
 
   return (
-    <div className="pb-28 lg:pb-0">
-      {/* Compact hero */}
+    <div>
+      {/* ── Compact hero ─────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <img
-          src={e.image}
+          src={e.heroImage ?? e.image}
           alt={`${e.title} event poster`}
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: e.heroPosition ?? "center 20%" }}
         />
         <div className="from-background via-background/70 absolute inset-0 bg-gradient-to-t to-transparent" />
         <div className="relative mx-auto max-w-[1400px] px-5 pt-28 pb-12 sm:px-8 sm:pt-32 sm:pb-16">
@@ -112,9 +110,9 @@ export function TicketPage({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* Event info */}
+      {/* ── Event info strip ─────────────────────────────────────────────── */}
       <section className="border-border/60 border-y">
-        <dl className="mx-auto grid max-w-[1400px] grid-cols-2 gap-6 px-5 py-8 sm:px-8 lg:grid-cols-5">
+        <dl className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 px-5 py-8 min-[420px]:grid-cols-2 sm:px-8 lg:grid-cols-5">
           <Info icon={<CalendarDays className="h-4 w-4" />} label="Date" value={formatDate(e.date)} />
           <Info icon={<Clock className="h-4 w-4" />} label="Time" value={e.time} />
           <Info
@@ -127,130 +125,358 @@ export function TicketPage({ slug }: { slug: string }) {
         </dl>
       </section>
 
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-14 sm:px-8 lg:grid-cols-[1fr_400px] lg:gap-16">
-        <div>
-          <h2 className="font-display text-2xl font-extrabold uppercase">Choose Your Ticket</h2>
+      {/* ── Main content: full width ─────────────────────────────────────── */}
+      <div className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8">
 
-          {e.ticketUrl ? (
-            <div className="border-border/70 bg-surface mt-6 rounded-xl border p-6">
-              <p className="text-muted-foreground text-sm">
-                Tickets for this event are sold through our ticketing partner.
-              </p>
-              <a
-                href={e.ticketUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-heat text-primary-foreground mt-5 inline-block rounded-full px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase"
-              >
-                Buy Tickets
-              </a>
+        {/* ── Full-width content ─────────────────────────────────────────── */}
+        <div className="space-y-12">
+
+          {/* Ticket selection */}
+          <div>
+            <h2 className="font-display text-2xl font-extrabold uppercase">Choose Your Ticket</h2>
+
+            {e.ticketUrl ? (
+              <div className="border-border/70 bg-surface mt-6 rounded-xl border p-6">
+                <p className="text-muted-foreground text-sm">
+                  Tickets for this event are sold through our ticketing partner.
+                </p>
+                <a
+                  href={e.ticketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-heat text-primary-foreground mt-5 inline-block rounded-full px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase"
+                >
+                  Buy Tickets
+                </a>
+              </div>
+            ) : null}
+
+            <div className="mt-6 space-y-4">
+              {tiers.map((t) => (
+                <TierCard
+                  key={t.id}
+                  tier={t}
+                  count={qty[t.id] ?? 0}
+                  onChange={(n) => setCount(t.id, n)}
+                  onRequest={() => setVipOpen(true)}
+                  disabled={Boolean(e.ticketUrl)}
+                />
+              ))}
             </div>
-          ) : null}
 
-          <div className="mt-6 space-y-4">
-            {tiers.map((t) => (
-              <TierCard
-                key={t.id}
-                tier={t}
-                count={qty[t.id] ?? 0}
-                onChange={(n) => setCount(t.id, n)}
-                onRequest={() => setVipOpen(true)}
-                disabled={Boolean(e.ticketUrl)}
-              />
-            ))}
-          </div>
-
-          <a
-            href={waEvent}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border/70 hover:bg-surface-2 mt-6 inline-flex items-center gap-2 rounded-full border px-7 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-colors"
-          >
-            <WhatsAppIcon className="h-4 w-4" /> WhatsApp for tickets
-          </a>
-
-          {vipOpen ? <VipRequestForm eventTitle={e.title} waVip={waVip} /> : null}
-        </div>
-
-        {/* Order summary */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border-border/70 bg-surface rounded-xl border p-6">
-            <h2 className="font-display text-lg font-extrabold uppercase">Your Order</h2>
-            {lines.length === 0 ? (
-              <p className="text-muted-foreground mt-4 text-sm">
-                No tickets selected yet. Pick a tier to see your total.
-              </p>
-            ) : (
-              <>
-                <ul className="mt-5 space-y-3 text-sm">
-                  {lines.map((l) => (
-                    <li key={l.tier.id} className="flex justify-between gap-4">
-                      <span className="text-muted-foreground">
-                        {l.tier.name} × {l.count}
-                      </span>
-                      <span>{formatCad(l.tier.amount * l.count)}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="border-border/60 mt-5 space-y-2 border-t pt-4 text-sm">
-                  <Row label="Subtotal" value={formatCad(subtotal)} />
-                  <Row label="Service fee" value={formatCad(fee)} />
-                  <div className="flex justify-between pt-2 text-base font-bold">
-                    <span>Total</span>
-                    <span>{formatCad(total)}</span>
-                  </div>
-                </div>
-              </>
-            )}
-            <button
-              type="button"
-              disabled={lines.length === 0}
-              onClick={() => setStage("checkout")}
-              className="bg-heat text-primary-foreground mt-6 w-full rounded-full px-6 py-4 text-xs font-bold tracking-[0.22em] uppercase disabled:cursor-not-allowed disabled:opacity-40"
+            <a
+              href={waEvent}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-border/70 hover:bg-surface-2 mt-6 inline-flex items-center gap-2 rounded-full border px-7 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-colors"
             >
-              Continue to checkout
-            </button>
+              <WhatsAppIcon className="h-4 w-4" /> WhatsApp for tickets
+            </a>
+
+            {vipOpen ? <VipRequestForm eventTitle={e.title} waVip={waVip} /> : null}
           </div>
 
-          {stage === "checkout" && lines.length > 0 ? (
-            <CheckoutForm total={total} waEvent={waEvent} />
-          ) : null}
-        </aside>
-      </div>
-
-      {/* Mobile sticky bar */}
-      <div className="bg-background/95 border-border/60 fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t px-4 py-3 backdrop-blur-xl lg:hidden">
-        <div className="min-w-0 flex-1">
-          <p className="eyebrow">Your total</p>
-          <p className="font-display text-lg font-extrabold">{formatCad(total)}</p>
+          {/* Attendee details + booking — always visible */}
+          <BookingForm
+            total={total}
+            lines={lines}
+            subtotal={subtotal}
+            fee={fee}
+            waEvent={waEvent}
+            ageRequirement={e.ageRequirement}
+            hasTickets={lines.length > 0}
+          />
         </div>
-        <a
-          href={waEvent}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="WhatsApp for tickets"
-          className="bg-whatsapp text-background flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-        >
-          <WhatsAppIcon className="h-5 w-5" />
-        </a>
-        <button
-          type="button"
-          disabled={lines.length === 0}
-          onClick={() => setStage("checkout")}
-          className="bg-heat text-primary-foreground shrink-0 rounded-full px-6 py-3 text-xs font-bold tracking-[0.22em] uppercase disabled:opacity-40"
-        >
-          Continue
-        </button>
+
       </div>
     </div>
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+/* ── Booking form (attendee details + submission) ──────────────────────────── */
+
+const inputClass =
+  "border-border/70 bg-background focus:border-gold w-full rounded-lg border px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/50";
+
+function BookingForm({
+  total,
+  lines,
+  subtotal,
+  fee,
+  waEvent,
+  ageRequirement,
+  hasTickets,
+}: {
+  total: number;
+  lines: { tier: TicketTier; count: number }[];
+  subtotal: number;
+  fee: number;
+  waEvent: string;
+  ageRequirement: string;
+  hasTickets: boolean;
+}) {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState<Record<string, string>>({});
+
+  const hasAgeRestriction = !ageRequirement.toLowerCase().startsWith("all ages");
+
+  const validate = (f: FormData) => {
+    const next: Record<string, string> = {};
+
+    if (!hasTickets) {
+      next["tickets"] = "Please select at least one ticket before booking.";
+    }
+    if (!String(f.get("firstName") ?? "").trim())
+      next["firstName"] = "First name is required.";
+    if (!String(f.get("lastName") ?? "").trim())
+      next["lastName"] = "Last name is required.";
+
+    const email = String(f.get("email") ?? "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
+      next["email"] = "Enter a valid email address.";
+
+    const digitsOnly = String(f.get("phone") ?? "").replace(/[^\d]/g, "");
+    const localDigits = digitsOnly.startsWith("1") ? digitsOnly.slice(1) : digitsOnly;
+    if (localDigits.length < 10)
+      next["phone"] = "Enter a valid Canadian phone number.";
+
+    if (hasAgeRestriction && f.get("ageConfirm") !== "on")
+      next["ageConfirm"] = "You must confirm you meet the age requirement for this event.";
+
+    if (f.get("terms") !== "on")
+      next["terms"] = "You must agree to the Terms & Conditions and Privacy Policy.";
+
+    return next;
+  };
+
+  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    const f = new FormData(ev.currentTarget);
+    const next = validate(f);
+    setErrors(next);
+    if (Object.keys(next).length === 0) {
+      setFormData({
+        firstName: String(f.get("firstName") ?? ""),
+        lastName: String(f.get("lastName") ?? ""),
+        email: String(f.get("email") ?? ""),
+        phone: String(f.get("phone") ?? ""),
+      });
+      setSubmitted(true);
+    }
+  };
+
+  /* ── Confirmation step ───────────────────────────────────────────────── */
+  if (submitted) {
+    return (
+      <div className="border-border/70 bg-surface space-y-5 rounded-xl border p-6">
+        <div className="flex items-center gap-3">
+          <div className="bg-gold/20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+            <ShieldCheck className="text-gold h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="font-display text-lg font-extrabold uppercase">Booking Summary</h2>
+            <p className="text-muted-foreground text-xs">Review your details before confirming</p>
+          </div>
+        </div>
+
+        {/* Selected tickets */}
+        {lines.length > 0 && (
+          <div className="border-border/60 rounded-lg border p-4 text-sm">
+            <p className="eyebrow mb-3">Selected tickets</p>
+            <ul className="space-y-2">
+              {lines.map((l) => (
+                <li key={l.tier.id} className="flex justify-between gap-4">
+                  <span className="text-muted-foreground">{l.tier.name} × {l.count}</span>
+                  <span>{formatCad(l.tier.amount * l.count)}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="border-border/60 mt-3 space-y-1.5 border-t pt-3">
+              <OrderRow label="Subtotal" value={formatCad(subtotal)} />
+              <OrderRow
+                label={`Service fee (${Math.round(serviceFeeRate * 100)}%)`}
+                value={formatCad(fee)}
+              />
+              <div className="flex justify-between pt-1 font-bold">
+                <span>Total</span>
+                <span>{formatCad(total)}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Attendee recap */}
+        <div className="border-border/60 space-y-2 rounded-lg border p-4 text-sm">
+          <p className="eyebrow mb-3">Attendee details</p>
+          <SummaryRow label="Name" value={`${formData.firstName} ${formData.lastName}`} />
+          <SummaryRow label="Email" value={formData.email} />
+          <SummaryRow label="Phone" value={formData.phone} />
+        </div>
+
+        {/* Payment notice */}
+        <div className="border-border/60 bg-surface-2 rounded-lg border p-4 text-sm">
+          <p className="font-semibold">Online payment coming soon</p>
+          <p className="text-muted-foreground mt-1 leading-relaxed">
+            Card checkout will be live once a payment provider is connected. To secure your
+            tickets now, message us on WhatsApp — we'll confirm and hold your spot.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <a
+            href={waEvent}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-whatsapp text-background inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-xs font-bold tracking-[0.22em] uppercase"
+          >
+            <WhatsAppIcon className="h-4 w-4" /> Confirm on WhatsApp
+          </a>
+          <button
+            type="button"
+            onClick={() => setSubmitted(false)}
+            className="border-border/70 hover:bg-surface-2 w-full rounded-full border px-6 py-3 text-xs font-bold tracking-[0.22em] uppercase transition-colors"
+          >
+            Edit details
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Attendee details form ───────────────────────────────────────────── */
   return (
-    <div className="text-muted-foreground flex justify-between">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="border-border/70 bg-surface space-y-5 rounded-xl border p-6"
+    >
+      <h2 className="font-display text-lg font-extrabold uppercase">Attendee Details</h2>
+
+      {/* Ticket selection warning */}
+      {errors["tickets"] && (
+        <p className="text-heat text-sm font-semibold" role="alert">{errors["tickets"]}</p>
+      )}
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="First name *" name="firstName" error={errors["firstName"]} required />
+        <Field label="Last name *" name="lastName" error={errors["lastName"]} required />
+      </div>
+      <Field label="Email address *" name="email" type="email" error={errors["email"]} required />
+      <div>
+        <Field
+          label="Phone number *"
+          name="phone"
+          type="tel"
+          error={errors["phone"]}
+          required
+          placeholder="e.g. (416) 555-1234"
+        />
+        <p className="text-muted-foreground mt-1.5 text-xs">
+          Supports: +1 416 555 1234 · (416) 555-1234 · 416-555-1234
+        </p>
+      </div>
+
+      {/* Age restriction — only shown when event requires it */}
+      {hasAgeRestriction && (
+        <div>
+          <label className="border-border/60 flex cursor-pointer items-start gap-3 rounded-lg border p-4">
+            <input
+              type="checkbox"
+              name="ageConfirm"
+              id="ageConfirm"
+              className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--heat)]"
+            />
+            <span className="text-sm leading-relaxed">
+              <span className="text-heat font-semibold">{ageRequirement} event. </span>
+              I confirm I meet the age requirement and will carry valid government-issued photo ID.
+            </span>
+          </label>
+          {errors["ageConfirm"] && (
+            <p className="text-heat mt-1.5 text-xs" role="alert">{errors["ageConfirm"]}</p>
+          )}
+        </div>
+      )}
+
+      {/* Terms & Conditions — required */}
+      <div>
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            name="terms"
+            id="terms"
+            className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--heat)]"
+          />
+          <span className="text-muted-foreground text-sm leading-relaxed">
+            I agree to the{" "}
+            <a
+              href="/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground underline underline-offset-2"
+            >
+              Terms &amp; Conditions
+            </a>{" "}
+            and{" "}
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground underline underline-offset-2"
+            >
+              Privacy Policy
+            </a>
+            . *
+          </span>
+        </label>
+        {errors["terms"] && (
+          <p className="text-heat mt-1.5 text-xs" role="alert">{errors["terms"]}</p>
+        )}
+      </div>
+
+      {/* Marketing consent — optional */}
+      <label className="flex cursor-pointer items-start gap-3">
+        <input
+          type="checkbox"
+          name="marketing"
+          id="marketing"
+          className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--heat)]"
+        />
+        <span className="text-muted-foreground text-sm leading-relaxed">
+          I'd like to receive updates about upcoming AWAARA events. (Optional)
+        </span>
+      </label>
+
+      <p className="text-muted-foreground text-xs leading-relaxed">
+        Your details are used only to confirm your booking. No payment is processed on this page.
+      </p>
+
+      <button
+        type="submit"
+        className="bg-heat text-primary-foreground w-full rounded-full px-6 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.02]"
+      >
+        {hasTickets ? `Proceed to Booking — ${formatCad(total)}` : "Proceed to Booking"}
+      </button>
+    </form>
+  );
+}
+
+/* ── Small helpers ─────────────────────────────────────────────────────────── */
+
+function OrderRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="text-muted-foreground flex justify-between text-sm">
       <span>{label}</span>
       <span>{value}</span>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-semibold">{value}</span>
     </div>
   );
 }
@@ -274,6 +500,8 @@ function Info({
     </div>
   );
 }
+
+/* ── Ticket tier card ──────────────────────────────────────────────────────── */
 
 function TierCard({
   tier,
@@ -330,27 +558,31 @@ function TierCard({
                 type="button"
                 aria-label={`Decrease ${tier.name} quantity`}
                 onClick={() => onChange(count - 1)}
-                className="hover:text-gold transition-colors"
+                disabled={count === 0}
+                className="hover:text-gold transition-colors disabled:opacity-40"
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span className="w-5 text-center text-sm font-bold">{count}</span>
+              <span className="w-5 text-center text-sm font-bold tabular-nums">{count}</span>
               <button
                 type="button"
                 aria-label={`Increase ${tier.name} quantity`}
                 onClick={() => onChange(count + 1)}
-                className="hover:text-gold transition-colors"
+                disabled={count >= MAX_PER_TIER}
+                className="hover:text-gold transition-colors disabled:opacity-40"
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
-            <button
-              type="button"
-              onClick={() => onChange(Math.max(1, count))}
-              className="bg-heat text-primary-foreground rounded-full px-6 py-3 text-xs font-bold tracking-[0.22em] uppercase"
-            >
-              Select
-            </button>
+            {count === 0 && (
+              <button
+                type="button"
+                onClick={() => onChange(1)}
+                className="bg-heat text-primary-foreground rounded-full px-6 py-3 text-xs font-bold tracking-[0.22em] uppercase"
+              >
+                Select
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -358,134 +590,7 @@ function TierCard({
   );
 }
 
-const inputClass =
-  "border-border/70 bg-background focus:border-gold w-full rounded-lg border px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/50";
-
-type CheckoutStage = "form" | "review" | "pending";
-
-function CheckoutForm({ total, waEvent }: { total: number; waEvent: string }) {
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [stage, setStage] = useState<CheckoutStage>("form");
-  const [formData, setFormData] = useState<Record<string, string>>({});
-
-  const validate = (f: FormData) => {
-    const next: Record<string, string> = {};
-    if (!String(f.get("firstName") ?? "").trim()) next["firstName"] = "First name is required.";
-    if (!String(f.get("lastName") ?? "").trim()) next["lastName"] = "Last name is required.";
-    const email = String(f.get("email") ?? "").trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) next["email"] = "Enter a valid email address.";
-    const phone = String(f.get("phone") ?? "").replace(/[^\d]/g, "");
-    if (phone.length < 10) next["phone"] = "Enter a valid 10-digit phone number.";
-    return next;
-  };
-
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    const f = new FormData(ev.currentTarget);
-    const next = validate(f);
-    setErrors(next);
-    if (Object.keys(next).length === 0) {
-      setFormData({
-        firstName: String(f.get("firstName") ?? ""),
-        lastName: String(f.get("lastName") ?? ""),
-        email: String(f.get("email") ?? ""),
-        phone: String(f.get("phone") ?? ""),
-        instagram: String(f.get("instagram") ?? ""),
-      });
-      setStage("review");
-    }
-  };
-
-  // "Review" confirmation step — no payment is taken; shows pending state
-  if (stage === "review" || stage === "pending") {
-    return (
-      <div className="border-border/70 bg-surface mt-6 space-y-5 rounded-xl border p-6">
-        <div className="flex items-center gap-3">
-          <div className="bg-gold/20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-            <ShieldCheck className="text-gold h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="font-display text-lg font-extrabold uppercase">Order Summary</h2>
-            <p className="text-muted-foreground text-xs">Review your details before confirming</p>
-          </div>
-        </div>
-
-        {/* Customer details recap */}
-        <div className="border-border/60 space-y-2 rounded-lg border p-4 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Name</span>
-            <span className="font-semibold">{formData.firstName} {formData.lastName}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Email</span>
-            <span className="font-semibold">{formData.email}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Phone</span>
-            <span className="font-semibold">{formData.phone}</span>
-          </div>
-          <div className="border-border/60 flex justify-between border-t pt-2">
-            <span className="font-bold">Total</span>
-            <span className="font-bold">{formatCad(total)}</span>
-          </div>
-        </div>
-
-        {/* Payment pending notice */}
-        <div className="border-border/60 bg-surface-2 rounded-lg border p-4 text-sm">
-          <p className="font-semibold">Online payment coming soon</p>
-          <p className="text-muted-foreground mt-1 leading-relaxed">
-            Card checkout will be live once a payment provider is connected. To secure your
-            tickets now, message us on WhatsApp — we'll confirm and hold your spot.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <a
-            href={waEvent}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-whatsapp text-background inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-xs font-bold tracking-[0.22em] uppercase"
-          >
-            <WhatsAppIcon className="h-4 w-4" /> Confirm on WhatsApp
-          </a>
-          <button
-            type="button"
-            onClick={() => setStage("form")}
-            className="border-border/70 hover:bg-surface-2 w-full rounded-full border px-6 py-3 text-xs font-bold tracking-[0.22em] uppercase transition-colors"
-          >
-            Edit details
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className="border-border/70 bg-surface mt-6 space-y-4 rounded-xl border p-6"
-    >
-      <h2 className="font-display text-lg font-extrabold uppercase">Checkout Details</h2>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="First name" name="firstName" error={errors["firstName"]} required />
-        <Field label="Last name" name="lastName" error={errors["lastName"]} required />
-      </div>
-      <Field label="Email" name="email" type="email" error={errors["email"]} required />
-      <Field label="Phone number" name="phone" type="tel" error={errors["phone"]} required />
-      <Field label="Instagram handle (optional)" name="instagram" />
-      <p className="text-muted-foreground text-xs leading-relaxed">
-        Your details are used only to confirm your booking. No payment is processed here.
-      </p>
-      <button
-        type="submit"
-        className="bg-heat text-primary-foreground w-full rounded-full px-6 py-4 text-xs font-bold tracking-[0.22em] uppercase"
-      >
-        Review Order — {formatCad(total)}
-      </button>
-    </form>
-  );
-}
+/* ── VIP request form ──────────────────────────────────────────────────────── */
 
 function VipRequestForm({ eventTitle, waVip }: { eventTitle: string; waVip: string }) {
   const [message, setMessage] = useState("");
@@ -505,10 +610,10 @@ function VipRequestForm({ eventTitle, waVip }: { eventTitle: string; waVip: stri
       <p className="text-muted-foreground text-sm">
         Tell us about your group for {eventTitle} and our host will come back with table options.
       </p>
-      <Field label="Name" name="vipName" required />
-      <Field label="Phone" name="vipPhone" type="tel" required />
-      <Field label="Email" name="vipEmail" type="email" required />
-      <Field label="Number of guests" name="vipGuests" type="number" required />
+      <Field label="Name *" name="vipName" required />
+      <Field label="Phone *" name="vipPhone" type="tel" required />
+      <Field label="Email *" name="vipEmail" type="email" required />
+      <Field label="Number of guests *" name="vipGuests" type="number" required />
       <Field label="Preferred table" name="vipTable" />
       <div>
         <label className="eyebrow mb-2 block" htmlFor="vipMessage">
@@ -532,14 +637,12 @@ function VipRequestForm({ eventTitle, waVip }: { eventTitle: string; waVip: stri
           <WhatsAppIcon className="h-4 w-4" /> WhatsApp VIP booking
         </a>
       </div>
-      {message ? (
-        <p className="text-gold text-sm">
-          {message}
-        </p>
-      ) : null}
+      {message && <p className="text-gold text-sm">{message}</p>}
     </form>
   );
 }
+
+/* ── Field ─────────────────────────────────────────────────────────────────── */
 
 function Field({
   label,
@@ -547,20 +650,34 @@ function Field({
   type = "text",
   error,
   required,
+  placeholder,
 }: {
   label: string;
   name: string;
   type?: string;
   error?: string;
   required?: boolean;
+  placeholder?: string;
 }) {
   return (
     <div>
       <label className="eyebrow mb-2 block" htmlFor={name}>
         {label}
       </label>
-      <input id={name} name={name} type={type} required={required} className={inputClass} />
-      {error ? <p className="text-heat mt-1 text-xs">{error}</p> : null}
+      <input
+        id={name}
+        name={name}
+        type={type}
+        required={required}
+        placeholder={placeholder}
+        aria-describedby={error ? `${name}-error` : undefined}
+        className={inputClass}
+      />
+      {error && (
+        <p id={`${name}-error`} className="text-heat mt-1.5 text-xs" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

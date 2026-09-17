@@ -17,9 +17,9 @@ export const brand = {
   name: "AWAARA",
   tagline: "Canada's Desi Entertainment Experience",
   // PLACEHOLDER — replace with the real WhatsApp business number (digits only, incl. country code)
-  whatsappNumber: "14165550123",
-  email: "hello@awaara.ca",
-  phone: "+1 (416) 555-0123",
+  whatsappNumber: "14036051435",
+  email: "info@awaara.live",
+  phone: "+1 (403) 605-1435",
   instagram: "https://instagram.com/",
   instagramHandle: "@awaara.live",
   facebook: "https://facebook.com/",
@@ -109,6 +109,19 @@ export type EventItem = {
   dressCode: string;
   ageRequirement: string;
   tickets: TicketTier[];
+  /**
+   * Optional dedicated hero background photo — a real photograph used for the
+   * event-detail and ticket-page hero sections. When set, this takes priority
+   * over `image` (which may be a designed poster/artwork) in those hero contexts.
+   * Falls back to `image` if not provided.
+   */
+  heroImage?: string;
+  /**
+   * CSS object-position for the hero image — controls which part of the image
+   * is visible when cropped to a wide landscape hero.
+   * Defaults to "center 20%" if omitted.
+   */
+  heroPosition?: string;
 };
 
 const baseTickets: TicketTier[] = [
@@ -184,6 +197,8 @@ export const events: EventItem[] = [
     dressCode: "Smart night out. No athletic wear.",
     ageRequirement: "19+ with valid government photo ID",
     tickets: baseTickets,
+    heroImage: heroImg,
+    heroPosition: "center center",
   },
   {
     id: "2",
@@ -209,6 +224,7 @@ export const events: EventItem[] = [
     dressCode: "Anything you can dance in.",
     ageRequirement: "All ages until 11 PM, 19+ after",
     tickets: baseTickets,
+    heroPosition: "center 10%",
   },
   {
     id: "3",
@@ -234,6 +250,7 @@ export const events: EventItem[] = [
     dressCode: "Rooftop chic.",
     ageRequirement: "19+ with valid government photo ID",
     tickets: baseTickets,
+    heroPosition: "center 35%",
   },
   {
     id: "4",
@@ -259,6 +276,7 @@ export const events: EventItem[] = [
     dressCode: "Black tie with a mask. Masks available at the door.",
     ageRequirement: "19+ with valid government photo ID",
     tickets: baseTickets,
+    heroPosition: "center 20%",
   },
 ];
 
@@ -358,26 +376,31 @@ export const heroSlides = [
     image: heroImg,
     alt: "Concert crowd with hands raised under red stage lights at a Toronto nightclub",
     accent: "Toronto · Live Events",
+    heroPosition: "center center",
   },
   {
     image: event3,
     alt: "Rooftop party with the Toronto skyline and CN Tower glowing at night",
     accent: "Rooftop · Premium Nightlife",
+    heroPosition: "center top",
   },
   {
     image: event1,
     alt: "DJ performing to a packed dancefloor with laser rigs and a desi crowd",
     accent: "DJ Nights · Desi Bass",
+    heroPosition: "center top",
   },
   {
     image: event4,
     alt: "Confetti raining over a themed Bollywood ballroom with masked guests",
     accent: "Bollywood · Special Events",
+    heroPosition: "center top",
   },
   {
     image: event2,
     alt: "Punjabi vocalist and live band performing on a production-grade stage",
     accent: "Live Music · Punjabi",
+    heroPosition: "center top",
   },
 ] as const;
 

@@ -31,7 +31,7 @@ export function FeaturedEvent() {
   return (
     <section className="border-border/60 border-y">
       <div className="mx-auto grid max-w-[1400px] items-stretch gap-0 lg:grid-cols-2">
-        <Reveal className="relative min-h-[420px] overflow-hidden lg:min-h-[680px]">
+        <Reveal className="relative min-h-[340px] overflow-hidden sm:min-h-[420px] lg:min-h-[680px]">
           <img
             src={e.image}
             alt={`${e.title} featured event poster`}
@@ -45,7 +45,7 @@ export function FeaturedEvent() {
 
         <Reveal className="flex flex-col justify-center px-5 py-14 sm:px-10 lg:py-20" delay={80}>
           <p className="eyebrow mb-5">Featured Event</p>
-          <h2 className="text-4xl leading-[0.9] font-extrabold uppercase sm:text-6xl">
+          <h2 className="text-[clamp(2.5rem,13vw,3.75rem)] leading-[0.9] font-extrabold uppercase sm:text-6xl">
             {e.title}
           </h2>
           <p className="text-muted-foreground mt-5 text-sm tracking-[0.12em] uppercase">
@@ -56,7 +56,7 @@ export function FeaturedEvent() {
             {e.artists.join(" • ")}
           </p>
 
-          <div className="mt-9 grid max-w-md grid-cols-4 gap-3">
+          <div className="mt-9 grid max-w-md grid-cols-2 gap-3 min-[420px]:grid-cols-4">
             {units.map((u) => (
               <div
                 key={u.label}
@@ -84,7 +84,7 @@ export function FeaturedEvent() {
               </a>
             ) : (
               <Link
-                to="/events/$slug/tickets"
+                to="/ticket/$slug"
                 params={{ slug: e.slug }}
                 className="bg-heat text-primary-foreground rounded-full px-8 py-4 text-center text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.03]"
               >

@@ -24,7 +24,7 @@ export function FloatingWhatsApp({ message }: { message: string }) {
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
       onClick={() => trackEvent("click_whatsapp", { source: "floating_button" })}
-      className="group fixed right-4 bottom-20 z-50 flex items-center gap-3 sm:right-6 sm:bottom-6"
+      className="group fixed right-4 bottom-24 z-50 flex items-center gap-3 sm:right-6 sm:bottom-6"
     >
       <span className="bg-surface-2 text-foreground pointer-events-none hidden rounded-full border px-4 py-2 text-xs font-medium opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100 lg:block">
         Chat with us

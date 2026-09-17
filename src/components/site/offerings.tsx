@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Instagram, Star } from "lucide-react";
+import { ChevronDown, Star } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -17,6 +17,7 @@ import {
 } from "@/data/site";
 import { WhatsAppIcon } from "@/components/site/whatsapp";
 import { Reveal, SectionHeading } from "@/components/site/reveal";
+import { SocialLinksCompact } from "@/components/site/social-icons";
 import { trackEvent } from "@/lib/analytics";
 
 /* ---------------- VIP ---------------- */
@@ -35,7 +36,7 @@ export function VipSection() {
       </div>
       <div className="relative mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-36">
         <SectionHeading
-          eyebrow="Tables â€¢ Bottle service â€¢ Suites"
+          eyebrow="Tables • Bottle service • Suites"
           title={
             <>
               Make it
@@ -56,7 +57,7 @@ export function VipSection() {
               "Corporate events",
             ].map((f) => (
               <li key={f} className="border-border/40 flex items-center gap-3 border-b py-2.5">
-                <span className="text-gold">â˜…</span> {f}
+                <span className="text-gold">★</span> {f}
               </li>
             ))}
           </ul>
@@ -101,10 +102,10 @@ export function PrivateEventsSection() {
               <span className="text-heat">Our energy.</span>
             </>
           }
-          subtitle="From boardroom to ballroom â€” we produce the whole thing: artists, venue, production and hospitality."
+          subtitle="From boardroom to ballroom — we produce the whole thing: artists, venue, production and hospitality."
         />
         <Reveal delay={120}>
-          <ul className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:text-base">
+          <ul className="grid grid-cols-1 gap-x-8 gap-y-3 text-sm min-[420px]:grid-cols-2 sm:text-base">
             {[
               "Corporate parties",
               "University events",
@@ -174,7 +175,7 @@ export function TestimonialsSection() {
         <SectionHeading eyebrow="Word of mouth" title="What the night said" align="center" />
         <Reveal delay={100} className="mt-10">
           <div
-            className="overflow-hidden"
+            className="max-w-full overflow-hidden"
             aria-label="Testimonials carousel"
             aria-live="polite"
             tabIndex={0}
@@ -217,7 +218,7 @@ export function TestimonialsSection() {
             {slides.map((t, slide) => (
               <div
                 key={`${t.name}-${slide}`}
-                className="min-w-full shrink-0"
+                className="min-w-full shrink-0 px-1"
                 aria-hidden={slide !== i}
               >
                 <p className="text-gold flex justify-center gap-1">
@@ -243,8 +244,8 @@ export function TestimonialsSection() {
                 onClick={() => goTo(d + 1)}
                 className={
                   d === active
-                    ? "bg-heat h-2 w-8 rounded-full transition-all"
-                    : "bg-surface-2 h-2 w-2 rounded-full transition-all"
+                    ? "bg-heat h-3 w-8 rounded-full transition-all"
+                    : "bg-surface-2 h-3 w-3 rounded-full transition-all"
                 }
               />
             ))}
@@ -321,7 +322,7 @@ export function FaqSection() {
         <Accordion type="single" collapsible className="gap-0">
           {faqs.map((f, idx) => (
             <AccordionItem key={idx} value={`faq-${idx}`} className="border-border/60">
-              <AccordionTrigger className="py-5 text-left text-base font-semibold hover:no-underline sm:text-lg">
+              <AccordionTrigger className="min-w-0 gap-4 py-5 text-left text-base leading-snug font-semibold hover:no-underline sm:text-lg">
                 {f.q}
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
@@ -360,7 +361,7 @@ export function ContactSection() {
                 it happen.
               </>
             }
-            subtitle="General inquiries, bookings, VIP, artists or partnerships â€” reach the right desk."
+            subtitle="General inquiries, bookings, VIP, artists or partnerships — reach the right desk."
           />
           <Reveal delay={120} className="mt-10 space-y-6">
             <div>
@@ -377,25 +378,7 @@ export function ContactSection() {
             </div>
             <div>
               <p className="eyebrow mb-3">Social</p>
-              <div className="flex gap-3">
-                {[
-                  { href: brand.instagram, icon: Instagram, label: "Instagram" },
-                  { href: brand.facebook, icon: null, label: "Facebook" },
-                  { href: brand.youtube, icon: null, label: "YouTube" },
-                  { href: brand.tiktok, icon: null, label: "TikTok" },
-                ].map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.label}
-                    className="border-border/70 hover:bg-surface-2 flex h-11 w-11 items-center justify-center rounded-full border text-xs font-bold transition-colors"
-                  >
-                    {s.icon ? <s.icon className="h-4 w-4" /> : s.label[0]}
-                  </a>
-                ))}
-              </div>
+              <SocialLinksCompact />
             </div>
           </Reveal>
         </div>
@@ -478,7 +461,7 @@ export function ContactSection() {
               />
               <button
                 type="submit"
-                className="bg-heat text-primary-foreground mt-2 rounded-full px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.02]"
+                className="bg-heat text-primary-foreground mt-2 w-full rounded-full px-8 py-4 text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.02] sm:w-auto"
                 disabled={submitting}
                 aria-disabled={submitting}
               >

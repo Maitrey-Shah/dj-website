@@ -59,8 +59,8 @@ export function Hero() {
             alt=""
             width={1920}
             height={1024}
-            className="absolute inset-0 h-full w-full object-cover object-[70%_center] sm:object-center"
-            style={{ zIndex: 1 }}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ zIndex: 1, objectPosition: heroSlides[prev].heroPosition }}
           />
         )}
 
@@ -71,9 +71,10 @@ export function Hero() {
           alt={heroSlides[current].alt}
           width={1920}
           height={1024}
-          className="absolute inset-0 h-full w-full object-cover object-[70%_center] sm:object-center"
+          className="absolute inset-0 h-full w-full object-cover"
           style={{
             zIndex: 2,
+            objectPosition: heroSlides[current].heroPosition,
             animation: `hero-fade-in ${FADE_DURATION}ms ease-in-out forwards`,
           }}
         />
@@ -90,7 +91,7 @@ export function Hero() {
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────────── */}
-      <div className="relative mx-auto flex min-h-[100svh] max-w-[1400px] flex-col justify-end px-5 pt-32 pb-12 sm:px-8 sm:pb-16" style={{ zIndex: 4 }}>
+      <div className="relative mx-auto flex min-h-[100svh] max-w-[1400px] flex-col justify-end px-5 pt-28 pb-12 sm:px-8 sm:pt-32 sm:pb-16" style={{ zIndex: 4 }}>
 
         {/* Slide accent label — changes with each slide */}
         <p
@@ -101,7 +102,7 @@ export function Hero() {
           {heroSlides[current].accent}
         </p>
 
-        <h1 className="max-w-4xl text-[3.25rem] leading-[0.86] font-extrabold tracking-tight uppercase sm:text-8xl lg:text-[8.5rem]">
+        <h1 className="max-w-4xl text-[clamp(3rem,15vw,5rem)] leading-[0.86] font-extrabold tracking-tight uppercase sm:text-8xl lg:text-[8.5rem]">
           The night
           <br />
           <span className="text-heat">starts here.</span>
@@ -131,7 +132,7 @@ export function Hero() {
             </a>
           ) : (
             <Link
-              to="/events/$slug/tickets"
+              to="/ticket/$slug"
               params={{ slug: featuredEvent.slug }}
               onClick={() => trackEvent("click_get_tickets", { source: "hero", event: featuredEvent.slug })}
               className="bg-heat text-primary-foreground glow rounded-full px-8 py-4 text-center text-xs font-bold tracking-[0.22em] uppercase transition-transform duration-300 hover:scale-[1.03]"
@@ -142,28 +143,28 @@ export function Hero() {
         </div>
 
         {/* ── Bottom bar ──────────────────────────────────────────────── */}
-        <div className="border-border/60 mt-14 flex flex-wrap items-end gap-x-10 gap-y-6 border-t pt-7">
+        <div className="border-border/60 mt-12 flex flex-wrap items-end gap-x-8 gap-y-6 border-t pt-7 sm:mt-14 sm:gap-x-10">
           <div>
             <p className="eyebrow mb-2">Next Event</p>
-            <p className="font-display text-3xl font-extrabold">
+            <p className="font-display text-2xl font-extrabold sm:text-3xl">
               {dayNum(featuredEvent.date)} {monthShort(featuredEvent.date)}
             </p>
           </div>
           <div>
             <p className="eyebrow mb-2">City</p>
-            <p className="font-display text-3xl font-extrabold uppercase">
+            <p className="font-display text-2xl font-extrabold uppercase sm:text-3xl">
               {featuredEvent.city}
             </p>
           </div>
           <div className="hidden sm:block">
             <p className="eyebrow mb-2">Venue</p>
-            <p className="font-display text-3xl font-extrabold uppercase">
+            <p className="font-display text-2xl font-extrabold uppercase sm:text-3xl">
               {featuredEvent.venue}
             </p>
           </div>
 
           {/* Slide indicator dots + live label */}
-          <div className="ml-auto flex shrink-0 flex-col items-end gap-3 pr-2">
+          <div className="flex w-full shrink-0 flex-col items-start gap-3 sm:ml-auto sm:w-auto sm:items-end sm:pr-2">
             {/* Dots */}
             <div className="flex items-center gap-2" role="tablist" aria-label="Hero image slides">
               {heroSlides.map((slide, i) => (

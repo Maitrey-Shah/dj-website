@@ -139,9 +139,9 @@ export function CitiesSection() {
           {cities.map((c) => (
             <li
               key={c.name}
-              className="border-border/60 group flex items-center justify-between border-b py-5 transition-colors hover:bg-surface/60 sm:py-7"
+              className="border-border/60 group flex flex-col items-start gap-2 border-b py-5 transition-colors hover:bg-surface/60 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-7"
             >
-              <span className="font-display text-3xl font-extrabold uppercase transition-transform duration-500 group-hover:translate-x-2 sm:text-6xl">
+              <span className="font-display text-[clamp(2rem,12vw,3.75rem)] font-extrabold uppercase transition-transform duration-500 group-hover:translate-x-2 sm:text-6xl">
                 {c.name}
               </span>
               <span className="text-muted-foreground flex items-center gap-4 text-xs tracking-[0.2em] uppercase">
@@ -211,8 +211,8 @@ export function SocialStrip() {
     i % 2 === 0 ? brand.instagramHandle : "The Night Starts Here",
   );
   return (
-    <section className="border-border/60 overflow-hidden border-b py-6">
-      <div className="marquee flex w-max gap-10 whitespace-nowrap">
+    <section className="border-border/60 max-w-full overflow-hidden border-b py-6">
+      <div className="marquee flex w-max max-w-none gap-10 whitespace-nowrap">
         {[...items, ...items].map((t, i) => (
           <span
             key={i}

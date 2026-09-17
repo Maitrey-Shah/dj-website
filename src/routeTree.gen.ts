@@ -18,8 +18,9 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
-import { Route as EventsSlugTicketsRouteImport } from './routes/events.$slug.tickets'
+import { Route as TicketSlugRouteImport } from './routes/ticket.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -66,15 +67,20 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TicketsRoute = TicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsSlugRoute = EventsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => EventsRoute,
 } as any)
-const EventsSlugTicketsRoute = EventsSlugTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
-  getParentRoute: () => EventsSlugRoute,
+const TicketSlugRoute = TicketSlugRouteImport.update({
+  id: '/ticket/$slug',
+  path: '/ticket/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -87,8 +93,9 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms': typeof TermsRoute
-  '/events/$slug': typeof EventsSlugRouteWithChildren
-  '/events/$slug/tickets': typeof EventsSlugTicketsRoute
+  '/tickets': typeof TicketsRoute
+  '/events/$slug': typeof EventsSlugRoute
+  '/ticket/$slug': typeof TicketSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,8 +107,9 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms': typeof TermsRoute
-  '/events/$slug': typeof EventsSlugRouteWithChildren
-  '/events/$slug/tickets': typeof EventsSlugTicketsRoute
+  '/tickets': typeof TicketsRoute
+  '/events/$slug': typeof EventsSlugRoute
+  '/ticket/$slug': typeof TicketSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,8 +122,9 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms': typeof TermsRoute
-  '/events/$slug': typeof EventsSlugRouteWithChildren
-  '/events/$slug/tickets': typeof EventsSlugTicketsRoute
+  '/tickets': typeof TicketsRoute
+  '/events/$slug': typeof EventsSlugRoute
+  '/ticket/$slug': typeof TicketSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,8 +138,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/privacy-policy'
     | '/terms'
+    | '/tickets'
     | '/events/$slug'
-    | '/events/$slug/tickets'
+    | '/ticket/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,8 +152,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/privacy-policy'
     | '/terms'
+    | '/tickets'
     | '/events/$slug'
-    | '/events/$slug/tickets'
+    | '/ticket/$slug'
   id:
     | '__root__'
     | '/'
@@ -155,8 +166,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/privacy-policy'
     | '/terms'
+    | '/tickets'
     | '/events/$slug'
-    | '/events/$slug/tickets'
+    | '/ticket/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -169,6 +181,8 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsRoute: typeof TermsRoute
+  TicketsRoute: typeof TicketsRoute
+  TicketSlugRoute: typeof TicketSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tickets': {
+      id: '/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof TicketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events/$slug': {
       id: '/events/$slug'
       path: '/$slug'
@@ -243,34 +264,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsSlugRouteImport
       parentRoute: typeof EventsRoute
     }
-    '/events/$slug/tickets': {
-      id: '/events/$slug/tickets'
-      path: '/tickets'
-      fullPath: '/events/$slug/tickets'
-      preLoaderRoute: typeof EventsSlugTicketsRouteImport
-      parentRoute: typeof EventsSlugRoute
+    '/ticket/$slug': {
+      id: '/ticket/$slug'
+      path: '/ticket/$slug'
+      fullPath: '/ticket/$slug'
+      preLoaderRoute: typeof TicketSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface EventsSlugRouteChildren {
-  EventsSlugTicketsRoute: typeof EventsSlugTicketsRoute
-}
-
-const EventsSlugRouteChildren: EventsSlugRouteChildren = {
-  EventsSlugTicketsRoute: EventsSlugTicketsRoute,
-}
-
-const EventsSlugRouteWithChildren = EventsSlugRoute._addFileChildren(
-  EventsSlugRouteChildren,
-)
-
 interface EventsRouteChildren {
-  EventsSlugRoute: typeof EventsSlugRouteWithChildren
+  EventsSlugRoute: typeof EventsSlugRoute
 }
 
 const EventsRouteChildren: EventsRouteChildren = {
-  EventsSlugRoute: EventsSlugRouteWithChildren,
+  EventsSlugRoute: EventsSlugRoute,
 }
 
 const EventsRouteWithChildren =
@@ -286,6 +295,8 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsRoute: TermsRoute,
+  TicketsRoute: TicketsRoute,
+  TicketSlugRoute: TicketSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

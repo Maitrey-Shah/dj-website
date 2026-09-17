@@ -58,9 +58,10 @@ export function EventDetail({ slug }: { slug: string }) {
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative min-h-[80svh] overflow-hidden">
         <img
-          src={e.image}
+          src={e.heroImage ?? e.image}
           alt={`${e.title} event poster`}
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: e.heroPosition ?? "center 20%" }}
         />
         <div className="from-background via-background/55 absolute inset-0 bg-gradient-to-t to-transparent" />
         <div className="from-background/90 absolute inset-0 bg-gradient-to-r to-transparent" />
@@ -256,7 +257,7 @@ function TicketCta({
 
   return (
     <Link
-      to="/events/$slug/tickets"
+      to="/ticket/$slug"
       params={{ slug: event.slug }}
       className={`bg-heat text-primary-foreground ${base}`}
     >

@@ -21,7 +21,7 @@ function GetTicketsCta({ event, className }: { event: EventItem; className: stri
   }
   return (
     <Link
-      to="/events/$slug/tickets"
+      to="/ticket/$slug"
       params={{ slug: event.slug }}
       onClick={() => trackEvent("click_get_tickets", { source: "event_card", event: event.slug })}
       className={className}
@@ -58,10 +58,10 @@ export function EventCard({ event }: { event: EventItem }) {
             className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
           />
           <div className="fade-bottom absolute inset-0" />
-          <span className="bg-background/70 absolute top-4 left-4 rounded-full border px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] uppercase backdrop-blur-md">
+          <span className="bg-background/70 absolute top-4 left-4 max-w-[calc(100%-2rem)] rounded-full border px-3 py-1 text-[0.65rem] font-semibold tracking-[0.18em] uppercase backdrop-blur-md">
             {event.category}
           </span>
-          <span className="bg-heat text-primary-foreground absolute top-4 right-4 rounded-full px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] uppercase">
+          <span className="bg-heat text-primary-foreground absolute top-12 left-4 rounded-full px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] uppercase min-[420px]:top-4 min-[420px]:right-4 min-[420px]:left-auto">
             {event.status}
           </span>
 
@@ -89,7 +89,7 @@ export function EventCard({ event }: { event: EventItem }) {
         <div className="mt-5 flex items-center gap-3">
           <GetTicketsCta
             event={event}
-            className="bg-heat text-primary-foreground inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3 text-[0.7rem] font-bold tracking-[0.2em] uppercase transition-transform duration-300 hover:scale-[1.02]"
+            className="bg-heat text-primary-foreground inline-flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-4 py-3 text-center text-[0.7rem] font-bold tracking-[0.16em] uppercase transition-transform duration-300 hover:scale-[1.02] sm:px-5 sm:tracking-[0.2em]"
           />
           <Link
             to="/events/$slug"

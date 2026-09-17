@@ -69,8 +69,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-3">
           <Link
-            to="/"
-            hash="events"
+            to="/tickets"
             className="bg-heat text-primary-foreground hidden rounded-full px-6 py-2.5 text-xs font-bold tracking-[0.2em] uppercase transition-transform duration-300 hover:scale-[1.04] sm:inline-block"
           >
             Tickets
@@ -88,18 +87,19 @@ export function Navbar() {
 
       <div
         className={cn(
-          "bg-background/97 fixed inset-0 top-0 z-40 flex flex-col justify-center gap-2 px-8 backdrop-blur-2xl transition-all duration-400 lg:hidden",
+          "bg-background/98 border-border/60 fixed inset-x-0 top-[72px] z-40 max-h-[calc(100svh-72px)] overflow-y-auto border-t px-5 py-5 shadow-2xl backdrop-blur-2xl transition-all duration-300 sm:px-8 lg:hidden",
           open
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none translate-y-3 opacity-0",
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-4 opacity-0",
         )}
+        aria-hidden={!open}
       >
         {/* Mobile menu logo */}
-        <Link to="/" onClick={() => setOpen(false)} className="mb-4 block" aria-label="AWAARA — home">
+        <Link to="/" onClick={() => setOpen(false)} className="mb-3 block" aria-label="AWAARA — home">
           <img
             src="/brand/awaara-logo-white.svg"
             alt="AWAARA"
-            className="h-auto w-[100px]"
+            className="h-auto w-[100px] sm:w-[112px]"
           />
         </Link>
         {links.map((l, i) => (
@@ -109,16 +109,15 @@ export function Navbar() {
             hash={l.hash}
             onClick={() => setOpen(false)}
             style={{ transitionDelay: `${i * 40}ms` }}
-            className="font-display border-border/40 border-b py-4 text-3xl font-extrabold uppercase"
+            className="font-display border-border/40 block border-b py-3.5 text-2xl leading-none font-extrabold uppercase sm:text-3xl"
           >
             {l.label}
           </Link>
         ))}
         <Link
-          to="/"
-          hash="events"
+          to="/tickets"
           onClick={() => setOpen(false)}
-          className="bg-heat text-primary-foreground mt-8 rounded-full px-6 py-4 text-center text-sm font-bold tracking-[0.22em] uppercase"
+          className="bg-heat text-primary-foreground mt-6 block w-full rounded-full px-6 py-4 text-center text-sm font-bold tracking-[0.22em] uppercase sm:max-w-xs"
         >
           Get Tickets
         </Link>

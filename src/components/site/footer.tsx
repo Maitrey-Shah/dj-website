@@ -101,7 +101,18 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {brand.name}. All rights reserved.
           </p>
-          <p className="tracking-[0.22em] uppercase">The Night Starts Here.</p>
+          <p className="text-center tracking-[0.22em] uppercase">The Night Starts Here.</p>
+          <p className="text-muted-foreground/90 text-center text-[0.75rem] tracking-wide sm:text-[0.8125rem]">
+            Designed and Developed by{" "}
+            <a
+              href="https://www.ecliptixsolutions.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              Ecliptix Solutions
+            </a>
+          </p>
         </div>
       </div>
     </footer>

@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getEvent } from "@/data/site";
+import { Navbar } from "@/components/site/navbar";
+import { Footer } from "@/components/site/footer";
+import { FloatingWhatsApp } from "@/components/site/whatsapp";
 import { TicketPage } from "@/components/site/ticket-page";
+import { getEvent, whatsappMessages } from "@/data/site";
 import { absoluteUrl, canonical, pageMeta } from "@/lib/seo";
 
-export const Route = createFileRoute("/events/$slug/tickets")({
+export const Route = createFileRoute("/ticket/$slug")({
   head: ({ params }) => {
     const e = getEvent(params.slug);
     if (!e) {
@@ -14,8 +17,8 @@ export const Route = createFileRoute("/events/$slug/tickets")({
         ],
       };
     }
-    const title = `Tickets — ${e.title} | ${e.city} | AWAARA`;
-    const path = `/events/${e.slug}/tickets`;
+    const title = `${e.title} Tickets | AWAARA`;
+    const path = `/tickets/${e.slug}`;
     return {
       meta: pageMeta({
         title,
@@ -26,10 +29,19 @@ export const Route = createFileRoute("/events/$slug/tickets")({
       links: [canonical(path)],
     };
   },
-  component: TicketsPage,
+  component: TicketRoutePage,
 });
 
-function TicketsPage() {
+function TicketRoutePage() {
   const { slug } = Route.useParams();
-  return <TicketPage slug={slug} />;
+  return (
+    <div className="bg-background text-foreground">
+      <Navbar />
+      <main>
+        <TicketPage slug={slug} />
+      </main>
+      <Footer />
+      <FloatingWhatsApp message={whatsappMessages.general} />
+    </div>
+  );
 }

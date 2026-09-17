@@ -36,14 +36,14 @@ export function CookieConsent() {
       {open ? (
         <section
           aria-label="Cookie preferences"
-          className="bg-background/95 border-border/70 fixed inset-x-4 bottom-4 z-[70] rounded-xl border p-5 shadow-2xl backdrop-blur-xl sm:left-auto sm:max-w-md"
+          className="bg-background/95 border-border/70 fixed inset-x-3 bottom-3 z-[70] max-h-[min(80svh,28rem)] overflow-y-auto rounded-xl border p-4 shadow-2xl backdrop-blur-xl sm:inset-x-auto sm:right-4 sm:bottom-4 sm:max-w-md sm:p-5"
         >
           <h2 className="font-display text-lg font-extrabold uppercase">Cookie Preferences</h2>
           <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
             This website uses cookies and similar technologies to improve your experience and
             understand website usage. Analytics only loads if you accept.
           </p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <button
               type="button"
               onClick={() => choose("accepted")}
@@ -71,7 +71,7 @@ export function CookieConsent() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-muted-foreground hover:text-foreground fixed bottom-3 left-4 z-[60] text-[0.65rem] tracking-[0.18em] uppercase"
+        className="text-muted-foreground hover:text-foreground fixed bottom-3 left-4 z-[60] max-w-[45vw] text-left text-[0.65rem] tracking-[0.18em] uppercase"
       >
         Cookie Preferences
       </button>
